@@ -7,7 +7,7 @@ To use with xsbt 0.6.6, clone this project, publish it locally
 with "sbt update publish-local" and add the following to the definition
 of the xsbt project you want to test:
 
-  val junitInterface = "com.novocode" % "junit-interface" % "0.1"
+  val junitInterface = "com.novocode" % "junit-interface" % "0.2"
   override def testFrameworks = super.testFrameworks ++ List(new TestFramework("com.novocode.junit.JUnitFramework"))
 
 Your test classes need to implement the marker interface

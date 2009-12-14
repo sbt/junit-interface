@@ -7,34 +7,28 @@ import org.scalatools.testing.Runner;
 import org.scalatools.testing.TestFingerprint;
 
 
-class JUnitRunner implements Runner
+final class JUnitRunner implements Runner
 {
-  private final ClassLoader cl;
-  private final JUnitCore ju;
-  private final RunListenerAdapter listener;
+  private final ClassLoader testClassLoader;
+  private final RichLogger logger;
 
   JUnitRunner(ClassLoader testClassLoader, Logger[] loggers)
   {
-    this.cl = testClassLoader;
-    this.ju = new JUnitCore();
-    Logger logger = loggers.length == 1 ? loggers[0] : new MultiplexLogger(loggers);
-    this.listener = new RunListenerAdapter(logger);
-    ju.addListener(listener);
+    this.testClassLoader = testClassLoader;
+    this.logger = new RichLogger(loggers);
   }
 
   @Override
   public void run(String testClassName, TestFingerprint fingerprint, EventHandler eventHandler, String [] args)
   {
-    listener.setEventHandler(eventHandler);
+    EventDispatcher ed = new EventDispatcher(logger, eventHandler);
+    JUnitCore ju = new JUnitCore();
+    ju.addListener(ed);
     try
     {
-      Class<?> test = cl.loadClass(testClassName);
-      ju.run(test);
+      Class<?> cl = testClassLoader.loadClass(testClassName);
+      ju.run(cl);
     }
-    catch(Exception ex)
-    {
-      eventHandler.handle(new ErrorEvent(testClassName, "Test execution failed", ex));
-    }
-    finally { listener.setEventHandler(null); }
+    catch(Exception ex) { ed.post(new TestExecutionFailedEvent(testClassName, ex)); }
   }
 }

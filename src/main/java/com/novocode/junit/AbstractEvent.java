@@ -7,28 +7,35 @@ import org.scalatools.testing.Result;
 
 abstract class AbstractEvent implements Event
 {
-  private final String testName;
-  private final String msg;
-  private final Result result;
+  protected final String testName;
+  protected final String msg;
+  protected final Result result;
+  protected final Throwable error;
 
-  AbstractEvent(String testName, String msg, Result result)
+  AbstractEvent(String testName, String msg, Result result, Throwable error)
   {
     this.testName = testName;
     this.msg = msg;
     this.result = result;
+    this.error = error;
   }
 
   @Override
-  public String testName() { return testName; }
+  public final String testName() { return testName; }
 
   @Override
-  public String description() { return msg; }
+  public final String description() { return msg; }
 
   @Override
-  public Result result() { return result; }
+  public final Result result() { return result; }
+
+  @Override
+  public final Throwable error() { return error; }
+
+  public void logTo(RichLogger logger) { }
 
   static String buildName(Description desc)
   {
-    return desc.getClassName()+'#'+desc.getMethodName();
+    return desc.getClassName()+'.'+desc.getMethodName();
   }
 }

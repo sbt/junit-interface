@@ -8,16 +8,7 @@ import org.scalatools.testing.TestFingerprint;
 
 public final class JUnitFramework implements Framework
 {
-  private static final TestFingerprint[] FINGERPRINTS = new TestFingerprint[] {
-    new TestFingerprint()
-    {
-      @Override
-      public String superClassName() { return TestMarker.class.getName(); }
-    
-      @Override
-      public boolean isModule() { return false; }
-    }
-  };
+  private static final TestFingerprint[] FINGERPRINTS = new TestFingerprint[] { new JUnitFingerprint() };
 
   @Override
   public String name() { return "JUnit"; }
