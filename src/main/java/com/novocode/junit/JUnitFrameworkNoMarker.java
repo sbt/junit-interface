@@ -6,17 +6,17 @@ import org.scalatools.testing.Runner;
 import org.scalatools.testing.TestFingerprint;
 
 
-public final class JUnitFramework implements Framework
+public final class JUnitFrameworkNoMarker implements Framework
 {
-  private static final TestFingerprint[] FINGERPRINTS = new TestFingerprint[] { new JUnitFingerprint() };
+  private static final TestFingerprint[] FINGERPRINTS = new TestFingerprint[] { new NoMarkerFingerprint() };
 
   @Override
-  public String name() { return "JUnit"; }
+  public String name() { return "JUnit-NoMarker"; }
 
   @Override
   public Runner testRunner(ClassLoader testClassLoader, Logger[] loggers)
   {
-    return new JUnitRunner(testClassLoader, loggers, false);
+    return new JUnitRunner(testClassLoader, loggers, true);
   }
 
   @Override
