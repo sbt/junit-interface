@@ -3,12 +3,12 @@ package com.novocode.junit;
 import org.scalatools.testing.Framework;
 import org.scalatools.testing.Logger;
 import org.scalatools.testing.Runner;
-import org.scalatools.testing.TestFingerprint;
+import org.scalatools.testing.Fingerprint;
 
 
 public final class JUnitFramework implements Framework
 {
-  private static final TestFingerprint[] FINGERPRINTS = new TestFingerprint[] { new JUnitFingerprint() };
+  private static final Fingerprint[] FINGERPRINTS = new Fingerprint[] { new JUnitFingerprint() };
 
   @Override
   public String name() { return "JUnit"; }
@@ -20,5 +20,5 @@ public final class JUnitFramework implements Framework
   }
 
   @Override
-  public TestFingerprint[] tests() { return FINGERPRINTS; }
+  public Fingerprint[] tests() { return FINGERPRINTS; }
 }

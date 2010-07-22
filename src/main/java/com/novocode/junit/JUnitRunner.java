@@ -5,12 +5,12 @@ import java.lang.annotation.Annotation;
 import org.junit.runner.JUnitCore;
 import org.junit.runners.Suite.SuiteClasses;
 import org.scalatools.testing.EventHandler;
+import org.scalatools.testing.Fingerprint;
 import org.scalatools.testing.Logger;
-import org.scalatools.testing.Runner;
-import org.scalatools.testing.TestFingerprint;
+import org.scalatools.testing.Runner2;
 
 
-final class JUnitRunner implements Runner
+final class JUnitRunner extends Runner2
 {
   private static final String SUITE_ANNO = SuiteClasses.class.getName();
   private final ClassLoader testClassLoader;
@@ -25,7 +25,7 @@ final class JUnitRunner implements Runner
   }
 
   @Override
-  public void run(String testClassName, TestFingerprint fingerprint, EventHandler eventHandler, String [] args)
+  public void run(String testClassName, Fingerprint fingerprint, EventHandler eventHandler, String [] args)
   {
     EventDispatcher ed = new EventDispatcher(logger, eventHandler);
     JUnitCore ju = new JUnitCore();
