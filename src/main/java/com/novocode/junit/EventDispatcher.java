@@ -9,8 +9,6 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import org.scalatools.testing.EventHandler;
 
-import com.novocode.junit.OutputRedirector.Capture;
-
 
 final class EventDispatcher extends RunListener
 {
@@ -18,7 +16,7 @@ final class EventDispatcher extends RunListener
   private final HashSet<String> reported = new HashSet<String>();
   private final EventHandler handler;
   private final boolean quiet, verbose;
-  private Capture capture;
+  private OutputCapture capture;
 
   EventDispatcher(RichLogger logger, EventHandler handler, boolean quiet, boolean verbose)
   {
@@ -87,7 +85,7 @@ final class EventDispatcher extends RunListener
   private void capture()
   {
     if(quiet && capture == null)
-      capture = OutputRedirector.capture();
+      capture = OutputCapture.start();
   }
 
   void uncapture(boolean replay)

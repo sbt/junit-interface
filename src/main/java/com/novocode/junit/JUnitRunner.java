@@ -27,6 +27,11 @@ final class JUnitRunner extends Runner2
       if("-q".equals(s)) quiet = true;
       else if("-v".equals(s)) verbose = true;
     }
+    for(String s : args)
+    {
+      if("+q".equals(s)) quiet = false;
+      else if("+v".equals(s)) verbose = false;
+    }
     EventDispatcher ed = new EventDispatcher(logger, eventHandler, quiet, verbose);
     JUnitCore ju = new JUnitCore();
     ju.addListener(ed);
