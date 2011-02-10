@@ -23,7 +23,7 @@ final class JUnitRunner extends Runner2
   public void run(String testClassName, Fingerprint fingerprint, EventHandler eventHandler, String [] args)
   {
     boolean quiet = false, verbose = false;
-    String testFilter = "";
+    String testFilter = null;
     for(String s : args)
     {
       if("-q".equals(s)) quiet = true;

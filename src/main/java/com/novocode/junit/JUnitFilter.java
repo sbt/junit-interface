@@ -11,8 +11,9 @@ public final class JUnitFilter extends Filter {
   private String[] testPatterns;
 
   public JUnitFilter(String testFilter) {
-    super();
-    testPatterns = testFilter.split(DELIMITER);
+    if (testFilter != null) {
+      testPatterns = testFilter.split(DELIMITER);
+    }
   }
 
   public String describe() {
@@ -38,6 +39,6 @@ public final class JUnitFilter extends Filter {
 
     // If we have no test patterns, run everything
     // If we have any, and made it down here, return false
-    return testPatterns.length == 0;
+    return testPatterns == null || testPatterns.length == 0;
   }
 }
