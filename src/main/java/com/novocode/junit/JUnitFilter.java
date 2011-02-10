@@ -36,6 +36,8 @@ public final class JUnitFilter extends Filter {
       }
     }
 
-    return false;
+    // If we have no test patterns, run everything
+    // If we have any, and made it down here, return false
+    return testPatterns.length == 0;
   }
 }
