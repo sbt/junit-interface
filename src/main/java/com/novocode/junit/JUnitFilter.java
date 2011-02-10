@@ -9,8 +9,10 @@ public final class JUnitFilter extends Filter {
   private static final String DELIMITER = "\\,";
 
   private String[] testPatterns;
+  private EventDispatcher ed_;
 
-  public JUnitFilter(String testFilter) {
+  public JUnitFilter(String testFilter, EventDispatcher ed) {
+    ed_ = ed;
     if (testFilter != null) {
       testPatterns = testFilter.split(DELIMITER);
     }
@@ -39,6 +41,10 @@ public final class JUnitFilter extends Filter {
 
     // If we have no test patterns, run everything
     // If we have any, and made it down here, return false
-    return testPatterns == null || testPatterns.length == 0;
+    boolean shouldRun = testPatterns == null || testPatterns.length == 0;
+    if (!shouldRun) {
+      ed_.testIgnored(d);
+    }
+    return shouldRun;
   }
 }
