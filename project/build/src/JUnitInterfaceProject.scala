@@ -3,7 +3,7 @@ import java.io.File
 
 class JUnitInterfaceProject(info: ProjectInfo) extends DefaultProject(info)
 {
-  val junit = "junit" % "junit" % "4.8.1"
+  val junit = "junit" % "junit" % "4.8.2"
   val testInterface = "org.scala-tools.testing" % "test-interface" % "0.5"
   override def javaCompileOptions = JavaCompileOption("-target") :: JavaCompileOption("1.5") :: Nil
 
