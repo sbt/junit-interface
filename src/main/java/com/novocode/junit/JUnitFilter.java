@@ -1,50 +1,51 @@
 // Mostly copied from http://stackoverflow.com/questions/1230706/running-a-subset-of-junit-test-methods/1236782#1236782
 package com.novocode.junit;
 
-import java.util.regex.*;
-import org.junit.runner.manipulation.Filter;
-import org.junit.runner.Description;
+import java.util.HashSet;
+import java.util.regex.Pattern;
 
-public final class JUnitFilter extends Filter {
+import org.junit.runner.Description;
+import org.junit.runner.manipulation.Filter;
+
+public final class JUnitFilter extends Filter
+{
   private static final String DELIMITER = "\\,";
 
-  private String[] testPatterns;
-  private EventDispatcher ed_;
+  private final HashSet<String> ignored = new HashSet<String>();
+  private final String[] testPatterns;
+  private final EventDispatcher ed;
 
-  public JUnitFilter(String testFilter, EventDispatcher ed) {
-    ed_ = ed;
-    if (testFilter != null) {
-      testPatterns = testFilter.split(DELIMITER);
-    }
+  public JUnitFilter(String testFilter, EventDispatcher ed)
+  {
+    this.ed = ed;
+    this.testPatterns = testFilter.split(DELIMITER);
   }
 
-  public String describe() {
-    return "Filters out all tests not explicitly named in a comma-delimited list in the system property 'tests'."; 
+  @Override
+  public String describe()
+  {
+    return "Filters out all tests not explicitly named in the '-tests=' option.";
   }
 
-  public boolean shouldRun(Description d) {
+  @Override
+  public boolean shouldRun(Description d)
+  {
     String displayName = d.getDisplayName();
-    
+
     // We get asked both if we should run the class/suite, as well as the individual tests
-    // So let the suite always run, so we can evaluate the individual testcases
-    if (displayName.indexOf('(') == -1) {
-      return true;
-    }
+    // So let the suite always run, so we can evaluate the individual test cases
+    if(displayName.indexOf('(') == -1) return true;
     String testName = displayName.substring(0, displayName.indexOf('('));
-    if (testPatterns == null) return true;
 
-    for (int i = 0; i < testPatterns.length; i++) {
-      if (Pattern.matches(testPatterns[i], testName)) {
-        return true;
-      }
-    }
+    // JUnit calls this multiple times per test and we don't want to print a new "test ignored"
+    // message each time
+    if(ignored.contains(testName)) return false;
 
-    // If we have no test patterns, run everything
-    // If we have any, and made it down here, return false
-    boolean shouldRun = testPatterns == null || testPatterns.length == 0;
-    if (!shouldRun) {
-      ed_.testIgnored(d);
-    }
-    return shouldRun;
+    for(String p : testPatterns)
+      if(Pattern.matches(p, testName)) return true;
+
+    ignored.add(testName);
+    ed.testIgnored(d);
+    return false;
   }
 }

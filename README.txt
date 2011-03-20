@@ -10,7 +10,7 @@ See LICENSE.txt for licensing conditions (BSD-style).
 
 To use with sbt 0.7, add the following dependency to your project:
 
-  val junitInterface = "com.novocode" % "junit-interface" % "0.5" % "test->default"
+  val junitInterface = "com.novocode" % "junit-interface" % "0.6" % "test->default"
 
 JUnit itself is automatically pulled in as a transitive dependency. sbt
 already knows about junit-interface so the dependency alone is enough. You do
@@ -33,6 +33,11 @@ The following options are supported for JUnit tests:
   +v  Turn off -v. Takes precedence over -v.
 
   +q  Turn off -q. Takes precedence over -q.
+
+  -tests=<REGEXPS>  Run only the tests whose names match one of the specified
+      regular expressions (in a comma-separated list). Non-matched tests are
+      ignored. Only individual test cases are matched, not test classes. Use
+      sbt's "test-only" command instead to match test classes.
 
 You can set default options in your project:
 

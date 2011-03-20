@@ -23,20 +23,12 @@ final class JUnitRunner extends Runner2
   public void run(String testClassName, Fingerprint fingerprint, EventHandler eventHandler, String [] args)
   {
     boolean quiet = false, verbose = false;
-    String testFilter = null;
+    String testFilter = "";
     for(String s : args)
     {
       if("-q".equals(s)) quiet = true;
       else if("-v".equals(s)) verbose = true;
-      else if(s.contains("-tests") ||
-              s.contains("-Dtests") ||
-              s.contains("-test") ||
-              s.contains("-Dtest")) {
-        String parts[] = s.split("=", 2);
-        if (parts.length == 2) {
-          testFilter = parts[1];
-        }
-      }
+      else if(s.startsWith("-tests=")) testFilter = s.substring(7);
     }
     for(String s : args)
     {
@@ -50,7 +42,8 @@ final class JUnitRunner extends Runner2
     try
     {
       Class<?> cl = testClassLoader.loadClass(testClassName);
-      Request request = Request.classes(cl).filterWith(new JUnitFilter(testFilter, ed));
+      Request request = Request.classes(cl);
+      if(testFilter.length() > 0) request = request.filterWith(new JUnitFilter(testFilter, ed));
       try { ju.run(request); } finally { ed.uncapture(true); }
     }
     catch(Exception ex) { ed.post(new TestExecutionFailedEvent(testClassName, ex)); }
