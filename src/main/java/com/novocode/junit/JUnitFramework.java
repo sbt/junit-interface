@@ -8,7 +8,8 @@ import org.scalatools.testing.Runner;
 
 public final class JUnitFramework implements Framework
 {
-  private static final Fingerprint[] FINGERPRINTS = new Fingerprint[] { new JUnitFingerprint() };
+  private static final Fingerprint[] FINGERPRINTS =
+          new Fingerprint[] { new JUnitFingerprint(), new JUnit3Fingerprint() };
 
   @Override
   public String name() { return "JUnit"; }
