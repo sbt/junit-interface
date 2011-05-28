@@ -2,7 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib_managed/compile/junit-4.8.1.jar"/>
 	<classpathentry kind="lib" path="lib_managed/compile/test-interface-0.5.jar"/>
+	<classpathentry kind="lib" path="lib_managed/compile/junit-4.8.2.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
