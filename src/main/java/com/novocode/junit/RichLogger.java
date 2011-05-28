@@ -49,10 +49,14 @@ final class RichLogger
     for(int i=0; i<=m; i++) error("    at " + trace[i]);
     if(m0 != m)
     {
+      // skip junit-related frames
       error("    ...");
-      return;
     }
-    if(framesInCommon != 0) error("    ... " + framesInCommon + " more");
+    else if(framesInCommon != 0)
+    {
+      // skip frames that were in the previous trace too
+      error("    ... " + framesInCommon + " more");
+    }
     logStackTraceAsCause(trace, t.getCause());
   }
 
