@@ -10,13 +10,13 @@ final class TestAssumptionFailedEvent extends AbstractEvent
 
   TestAssumptionFailedEvent(Failure failure)
   {
-    super(buildName(failure.getDescription()), failure.getMessage(), Result.Skipped, failure.getException());
+    super(buildErrorName(failure.getDescription()), failure.getMessage(), Result.Skipped, failure.getException());
     this.failure = failure;
   }
 
   @Override
   public void logTo(RichLogger logger)
   {
-    logger.warn("Test assumption in test "+AbstractEvent.buildName(failure.getDescription())+" failed: "+failure.getMessage());
+    logger.warn("Test assumption in test "+ansiName+" failed: "+failure.getMessage());
   }
 }

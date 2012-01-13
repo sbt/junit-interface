@@ -7,12 +7,12 @@ final class TestExecutionFailedEvent extends AbstractEvent
 {
   TestExecutionFailedEvent(String testName, Throwable err)
   {
-    super(testName, "Test execution failed", Result.Error, err);
+    super(Ansi.c(testName, Ansi.ERRMSG), "Test execution failed", Result.Error, err);
   }
 
   @Override
   public void logTo(RichLogger logger)
   {
-    logger.error("Execution of test "+testName+" failed", error);
+    logger.error("Execution of test "+ansiName+" failed", error);
   }
 }

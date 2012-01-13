@@ -11,30 +11,33 @@ import org.scalatools.testing.Runner2;
 final class JUnitRunner extends Runner2
 {
   private final ClassLoader testClassLoader;
-  private final RichLogger logger;
+  private final Logger[] loggers;
 
   JUnitRunner(ClassLoader testClassLoader, Logger[] loggers)
   {
     this.testClassLoader = testClassLoader;
-    this.logger = new RichLogger(loggers);
+    this.loggers = loggers;
   }
 
   @Override
   public void run(String testClassName, Fingerprint fingerprint, EventHandler eventHandler, String [] args)
   {
-    boolean quiet = false, verbose = false;
+    boolean quiet = false, verbose = false, nocolor = false;
     String testFilter = "";
     for(String s : args)
     {
       if("-q".equals(s)) quiet = true;
       else if("-v".equals(s)) verbose = true;
+      else if("-n".equals(s)) nocolor = true;
       else if(s.startsWith("-tests=")) testFilter = s.substring(7);
     }
     for(String s : args)
     {
       if("+q".equals(s)) quiet = false;
+      else if("+n".equals(s)) nocolor = false;
       else if("+v".equals(s)) verbose = false;
     }
+    RichLogger logger = new RichLogger(loggers, !nocolor);
     EventDispatcher ed = new EventDispatcher(logger, eventHandler, quiet, verbose);
     JUnitCore ju = new JUnitCore();
     ju.addListener(ed);

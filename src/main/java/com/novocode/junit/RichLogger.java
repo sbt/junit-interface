@@ -1,17 +1,33 @@
 package com.novocode.junit;
 
 import org.scalatools.testing.Logger;
+import static com.novocode.junit.Ansi.filterAnsi;
 
 
 final class RichLogger
 {
   private final Logger[] loggers;
+  private final boolean color;
 
-  RichLogger(Logger[] loggers) { this.loggers = loggers; }
+  RichLogger(Logger[] loggers, boolean color)
+  {
+    this.loggers = loggers;
+    this.color = color;
+  }
 
-  void debug(String s) { for(Logger l : loggers) l.debug(s); }
+  void debug(String s)
+  {
+    for(Logger l : loggers)
+      if(color && l.ansiCodesSupported()) l.debug(s);
+      else l.debug(filterAnsi(s));
+  }
 
-  void error(String s) { for(Logger l : loggers) l.error(s); }
+  void error(String s)
+  {
+    for(Logger l : loggers)
+      if(color && l.ansiCodesSupported()) l.error(s);
+      else l.error(filterAnsi(s));
+  }
 
   void error(String s, Throwable t)
   {
@@ -19,9 +35,19 @@ final class RichLogger
     if(t != null && !(t instanceof AssertionError)) logStackTrace(t);
   }
 
-  void info(String s) { for(Logger l : loggers) l.info(s); }
+  void info(String s)
+  {
+    for(Logger l : loggers)
+      if(color && l.ansiCodesSupported()) l.info(s);
+      else l.info(filterAnsi(s));
+  }
 
-  void warn(String s) { for(Logger l : loggers) l.warn(s); }
+  void warn(String s)
+  {
+    for(Logger l : loggers)
+      if(color && l.ansiCodesSupported()) l.warn(s);
+      else l.warn(filterAnsi(s));
+  }
 
   private void logStackTrace(Throwable t)
   {

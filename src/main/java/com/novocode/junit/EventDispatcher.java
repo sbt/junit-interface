@@ -9,6 +9,8 @@ import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunListener;
 import org.scalatools.testing.EventHandler;
 
+import static com.novocode.junit.Ansi.*;
+
 
 final class EventDispatcher extends RunListener
 {
@@ -53,21 +55,24 @@ final class EventDispatcher extends RunListener
   @Override
   public void testStarted(Description description)
   {
-    debugOrInfo("Test "+AbstractEvent.buildName(description)+" started");
+    debugOrInfo("Test "+AbstractEvent.buildInfoName(description)+" started");
     capture();
   }
 
   @Override
   public void testRunFinished(Result result)
   {
-    debugOrInfo("Test run finished: "+result.getFailureCount()+" failed, "+result.getIgnoreCount()+" ignored, "+
-      result.getRunCount()+" total, "+(result.getRunTime()/1000.0)+"s");
+    debugOrInfo(c("Test run finished: ", INFO)+
+      c(result.getFailureCount()+" failed", result.getFailureCount() > 0 ? ERRCOUNT : INFO)+
+      c(", ", INFO)+
+      c(result.getIgnoreCount()+" ignored", result.getIgnoreCount() > 0 ? IGNCOUNT : INFO)+
+      c(", "+result.getRunCount()+" total, "+(result.getRunTime()/1000.0)+"s", INFO));
   }
 
   @Override
   public void testRunStarted(Description description)
   {
-    debugOrInfo("Test run started");
+    debugOrInfo(c("Test run started", INFO));
   }
 
   private void postIfFirst(AbstractEvent e)

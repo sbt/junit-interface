@@ -10,13 +10,13 @@ final class TestFailedEvent extends AbstractEvent
 
   TestFailedEvent(Failure failure)
   {
-    super(buildName(failure.getDescription()), failure.getMessage(), Result.Failure, failure.getException());
+    super(buildErrorName(failure.getDescription()), failure.getMessage(), Result.Failure, failure.getException());
     this.failure = failure;
   }
 
   @Override
   public void logTo(RichLogger logger)
   {
-    logger.error("Test "+AbstractEvent.buildName(failure.getDescription())+" failed: "+failure.getMessage(), error);
+    logger.error("Test "+ansiName+" failed: "+failure.getMessage(), error);
   }
 }

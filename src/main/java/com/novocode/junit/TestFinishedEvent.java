@@ -6,11 +6,11 @@ import org.scalatools.testing.Result;
 
 final class TestFinishedEvent extends AbstractEvent
 {
-  TestFinishedEvent(Description desc) { super(buildName(desc), null, Result.Success, null); }
+  TestFinishedEvent(Description desc) { super(buildInfoName(desc), null, Result.Success, null); }
 
   @Override
   public void logTo(RichLogger logger)
   {
-    logger.debug("Test "+testName+" finished");
+    logger.debug("Test "+ansiName+" finished");
   }
 }

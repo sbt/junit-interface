@@ -8,9 +8,13 @@ binary-compatible test framework first.
 
 See LICENSE.txt for licensing conditions (BSD-style).
 
+To use with sbt 0.10+, add the following dependency to your build.sbt:
+
+libraryDependencies += "com.novocode" % "junit-interface" % "0.8" % "test"
+
 To use with sbt 0.7, add the following dependency to your project:
 
-  val junitInterface = "com.novocode" % "junit-interface" % "0.6" % "test->default"
+  val junitInterface = "com.novocode" % "junit-interface" % "0.8" % "test"
 
 JUnit itself is automatically pulled in as a transitive dependency. sbt
 already knows about junit-interface so the dependency alone is enough. You do
@@ -30,16 +34,25 @@ The following options are supported for JUnit tests:
       Scala is detected on the class path, junit-interface tries to reroute
       scala.Console's stdout, too.
 
+  -n  Do not use ANSI colors in the output even if sbt reports that they are
+      supported. 
+
   +v  Turn off -v. Takes precedence over -v.
 
   +q  Turn off -q. Takes precedence over -q.
+
+  +n  Turn off -n. Takes precedence over -n.
 
   -tests=<REGEXPS>  Run only the tests whose names match one of the specified
       regular expressions (in a comma-separated list). Non-matched tests are
       ignored. Only individual test cases are matched, not test classes. Use
       sbt's "test-only" command instead to match test classes.
 
-You can set default options in your project:
+In sbt 0.10+, you can set default options in your build.sbt file:
+
+  testOptions += Tests.Argument(TestFrameworks.JUnit, "-q", "-v")
+
+In sbt 0.7, add the following to your project:
 
   override def testOptions = 
     super.testOptions ++ 

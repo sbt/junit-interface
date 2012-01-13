@@ -7,4 +7,5 @@ package com.novocode.junit;
  * @since Dec 12, 2009
  */
 
+@Deprecated
 public interface TestMarker {}

@@ -6,11 +6,11 @@ import org.scalatools.testing.Result;
 
 final class TestIgnoredEvent extends AbstractEvent
 {
-  TestIgnoredEvent(Description desc) { super(buildName(desc), null, Result.Skipped, null); }
+  TestIgnoredEvent(Description desc) { super(buildInfoName(desc), null, Result.Skipped, null); }
 
   @Override
   public void logTo(RichLogger logger)
   {
-    logger.info("Test "+testName+" ignored");
+    logger.info("Test "+ansiName+" ignored");
   }
 }
