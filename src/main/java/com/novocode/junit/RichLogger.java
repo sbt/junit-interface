@@ -1,18 +1,20 @@
 package com.novocode.junit;
 
 import org.scalatools.testing.Logger;
-import static com.novocode.junit.Ansi.filterAnsi;
+import static com.novocode.junit.Ansi.*;
 
 
 final class RichLogger
 {
   private final Logger[] loggers;
   private final boolean color;
+  private final String testClassName;
 
-  RichLogger(Logger[] loggers, boolean color)
+  RichLogger(Logger[] loggers, boolean color, String testClassName)
   {
     this.loggers = loggers;
     this.color = color;
+    this.testClassName = testClassName;
   }
 
   void debug(String s)
@@ -52,10 +54,11 @@ final class RichLogger
   private void logStackTrace(Throwable t)
   {
     StackTraceElement[] trace = t.getStackTrace();
-    logStackTracePart(trace, trace.length-1, 0, t);
+    String testFileName = color ? findTestFileName(trace) : null;
+    logStackTracePart(trace, trace.length-1, 0, t, testFileName);
   }
 
-  private void logStackTracePart(StackTraceElement[] trace, int m, int framesInCommon, Throwable t)
+  private void logStackTracePart(StackTraceElement[] trace, int m, int framesInCommon, Throwable t, String testFileName)
   {
     final int m0 = m;
     for(int i=0; i<=m; i++)
@@ -72,7 +75,7 @@ final class RichLogger
         break;
       }
     }
-    for(int i=0; i<=m; i++) error("    at " + trace[i]);
+    for(int i=0; i<=m; i++) error("    at " + stackTraceElementToString(trace[i], testFileName));
     if(m0 != m)
     {
       // skip junit-related frames
@@ -83,10 +86,10 @@ final class RichLogger
       // skip frames that were in the previous trace too
       error("    ... " + framesInCommon + " more");
     }
-    logStackTraceAsCause(trace, t.getCause());
+    logStackTraceAsCause(trace, t.getCause(), testFileName);
   }
 
-  private void logStackTraceAsCause(StackTraceElement[] causedTrace, Throwable t)
+  private void logStackTraceAsCause(StackTraceElement[] causedTrace, Throwable t, String testFileName)
   {
     if(t == null) return;
     StackTraceElement[] trace = t.getStackTrace();
@@ -97,6 +100,35 @@ final class RichLogger
       n--;
     }
     error("Caused by: " + t);
-    logStackTracePart(trace, m, trace.length-1-m, t);
+    logStackTracePart(trace, m, trace.length-1-m, t, testFileName);
+  }
+
+  private String findTestFileName(StackTraceElement[] trace)
+  {
+    for(StackTraceElement e : trace)
+    {
+      String cln = e.getClassName();
+      if(testClassName.equals(cln)) return e.getFileName();
+    }
+    return null;
+  }
+
+  private String stackTraceElementToString(StackTraceElement e, String testFileName)
+  {
+    boolean highlight = color && (
+        testClassName.equals(e.getClassName()) ||
+        (testFileName != null && testFileName.equals(e.getFileName()))
+      );
+    StringBuilder b = new StringBuilder().append(e.getClassName()).append('.').append(e.getMethodName()).append('(');
+
+    if(e.isNativeMethod()) b.append(c("Native Method", highlight ? TESTFILE2 : null));
+    else if(e.getFileName() == null) b.append(c("Unknown Source", highlight ? TESTFILE2 : null));
+    else
+    {
+      b.append(c(e.getFileName(), highlight ? TESTFILE1 : null));
+      if(e.getLineNumber() >= 0)
+        b.append(':').append(c(String.valueOf(e.getLineNumber()), highlight ? TESTFILE2 : null));
+    }
+    return b.append(')').toString();
   }
 }

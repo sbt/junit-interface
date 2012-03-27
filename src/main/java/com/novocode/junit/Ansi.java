@@ -14,7 +14,11 @@ public class Ansi {
   private static final String CYAN = "\u001B[36m";
   private static final String WHITE = "\u001B[37m";
 
-  public static String c(String s, String colorSequence) { return colorSequence + s + NORMAL; }
+  public static String c(String s, String colorSequence)
+  {
+    if(colorSequence == null) return s;
+    else return colorSequence + s + NORMAL;
+  }
 
   public static String filterAnsi(String s)
   {
@@ -44,4 +48,6 @@ public class Ansi {
   public static final String ENAME1 = YELLOW;
   public static final String ENAME2 = RED;
   public static final String ENAME3 = YELLOW;
+  public static final String TESTFILE1 = MAGENTA;
+  public static final String TESTFILE2 = YELLOW;
 }

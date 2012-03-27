@@ -37,7 +37,7 @@ final class JUnitRunner extends Runner2
       else if("+n".equals(s)) nocolor = false;
       else if("+v".equals(s)) verbose = false;
     }
-    RichLogger logger = new RichLogger(loggers, !nocolor);
+    RichLogger logger = new RichLogger(loggers, !nocolor, testClassName);
     EventDispatcher ed = new EventDispatcher(logger, eventHandler, quiet, verbose);
     JUnitCore ju = new JUnitCore();
     ju.addListener(ed);
