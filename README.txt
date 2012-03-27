@@ -10,7 +10,7 @@ See LICENSE.txt for licensing conditions (BSD-style).
 
 To use with sbt 0.10+, add the following dependency to your build.sbt:
 
-libraryDependencies += "com.novocode" % "junit-interface" % "0.8" % "test"
+  libraryDependencies += "com.novocode" % "junit-interface" % "0.8" % "test"
 
 To use with sbt 0.7, add the following dependency to your project:
 
@@ -47,6 +47,13 @@ The following options are supported for JUnit tests:
       regular expressions (in a comma-separated list). Non-matched tests are
       ignored. Only individual test cases are matched, not test classes. Use
       sbt's "test-only" command instead to match test classes.
+
+  -Dkey=value Temporarily set a system property for the duration of the test
+      run. The property is restored to its previous value after the test has
+      ended. Note that system properties are global to the entire JVM and they
+      can be modified in a non-transactional way, so you should run tests
+      serially and not perform any other tasks in parallel which depend on
+      the modified property.
 
 In sbt 0.10+, you can set default options in your build.sbt file:
 
