@@ -41,6 +41,10 @@ The following options are supported for JUnit tests:
       silently to non-decoded names if no matching Scala library is on the
       class path.
 
+  -a  Log stack traces for AssertionErrors (thrown by all assert* methods in
+      JUnit). Without these options, failed assertions do not print a stack
+      trace.
+
   +v  Turn off -v. Takes precedence over -v.
 
   +q  Turn off -q. Takes precedence over -q.
@@ -48,6 +52,8 @@ The following options are supported for JUnit tests:
   +n  Turn off -n. Takes precedence over -n.
 
   +s  Turn off -s. Takes precedence over -s.
+
+  +a  Turn off -a. Takes precedence over -a.
 
   -tests=<REGEXPS>  Run only the tests whose names match one of the specified
       regular expressions (in a comma-separated list). Non-matched tests are

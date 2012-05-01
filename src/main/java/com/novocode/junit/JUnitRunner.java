@@ -26,7 +26,7 @@ final class JUnitRunner extends Runner2
   @Override
   public void run(String testClassName, Fingerprint fingerprint, EventHandler eventHandler, String [] args)
   {
-    boolean quiet = false, verbose = false, nocolor = false, decodeScalaNames = false;
+    boolean quiet = false, verbose = false, nocolor = false, decodeScalaNames = false, logAssert = false;
     HashMap<String, String> sysprops = new HashMap<String, String>();
     String testFilter = "";
     for(String s : args)
@@ -35,6 +35,7 @@ final class JUnitRunner extends Runner2
       else if("-v".equals(s)) verbose = true;
       else if("-n".equals(s)) nocolor = true;
       else if("-s".equals(s)) decodeScalaNames = true;
+      else if("-a".equals(s)) logAssert = true;
       else if(s.startsWith("-tests=")) testFilter = s.substring(7);
       else if(s.startsWith("-D") && s.contains("="))
       {
@@ -48,8 +49,9 @@ final class JUnitRunner extends Runner2
       else if("+v".equals(s)) verbose = false;
       else if("+n".equals(s)) nocolor = false;
       else if("+s".equals(s)) decodeScalaNames = false;
+      else if("+a".equals(s)) logAssert = false;
     }
-    RunSettings settings = new RunSettings(!nocolor, decodeScalaNames, quiet, verbose);
+    RunSettings settings = new RunSettings(!nocolor, decodeScalaNames, quiet, verbose, logAssert);
     RichLogger logger = new RichLogger(loggers, settings, testClassName);
     EventDispatcher ed = new EventDispatcher(logger, eventHandler, settings);
     JUnitCore ju = new JUnitCore();

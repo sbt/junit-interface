@@ -34,7 +34,7 @@ final class RichLogger
   void error(String s, Throwable t)
   {
     error(s);
-    if(t != null && !(t instanceof AssertionError)) logStackTrace(t);
+    if(t != null && (settings.logAssert || !(t instanceof AssertionError))) logStackTrace(t);
   }
 
   void info(String s)
@@ -61,21 +61,26 @@ final class RichLogger
   private void logStackTracePart(StackTraceElement[] trace, int m, int framesInCommon, Throwable t, String testFileName)
   {
     final int m0 = m;
-    for(int i=0; i<=m; i++)
+    int top = 0;
+    for(int i=top; i<=m; i++)
     {
       if(trace[i].toString().startsWith("org.junit."))
       {
-        m = i-1;
-        while(m > 0)
+        if(i == top) top++;
+        else
         {
-          String s = trace[m].toString();
-          if(!s.startsWith("java.lang.reflect.") && !s.startsWith("sun.reflect.")) break;
-          m--;
+          m = i-1;
+          while(m > top)
+          {
+            String s = trace[m].toString();
+            if(!s.startsWith("java.lang.reflect.") && !s.startsWith("sun.reflect.")) break;
+            m--;
+          }
+          break;
         }
-        break;
       }
     }
-    for(int i=0; i<=m; i++) error("    at " + stackTraceElementToString(trace[i], testFileName));
+    for(int i=top; i<=m; i++) error("    at " + stackTraceElementToString(trace[i], testFileName));
     if(m0 != m)
     {
       // skip junit-related frames

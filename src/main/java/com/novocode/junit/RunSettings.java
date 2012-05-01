@@ -13,14 +13,15 @@ import java.lang.reflect.Method;
 import org.junit.runner.Description;
 
 class RunSettings {
-  final boolean color, quiet, verbose;
+  final boolean color, quiet, verbose, logAssert;
   private final boolean decodeScalaNames;
 
-  RunSettings(boolean color, boolean decodeScalaNames, boolean quiet, boolean verbose) {
+  RunSettings(boolean color, boolean decodeScalaNames, boolean quiet, boolean verbose, boolean logAssert) {
     this.color = color;
     this.decodeScalaNames = decodeScalaNames;
     this.quiet = quiet;
     this.verbose = verbose;
+    this.logAssert = logAssert;
   }
 
   String decodeName(String name) {
