@@ -7,27 +7,27 @@ import static com.novocode.junit.Ansi.*;
 final class RichLogger
 {
   private final Logger[] loggers;
-  private final boolean color;
+  private final RunSettings settings;
   private final String testClassName;
 
-  RichLogger(Logger[] loggers, boolean color, String testClassName)
+  RichLogger(Logger[] loggers, RunSettings settings, String testClassName)
   {
     this.loggers = loggers;
-    this.color = color;
+    this.settings = settings;
     this.testClassName = testClassName;
   }
 
   void debug(String s)
   {
     for(Logger l : loggers)
-      if(color && l.ansiCodesSupported()) l.debug(s);
+      if(settings.color && l.ansiCodesSupported()) l.debug(s);
       else l.debug(filterAnsi(s));
   }
 
   void error(String s)
   {
     for(Logger l : loggers)
-      if(color && l.ansiCodesSupported()) l.error(s);
+      if(settings.color && l.ansiCodesSupported()) l.error(s);
       else l.error(filterAnsi(s));
   }
 
@@ -40,21 +40,21 @@ final class RichLogger
   void info(String s)
   {
     for(Logger l : loggers)
-      if(color && l.ansiCodesSupported()) l.info(s);
+      if(settings.color && l.ansiCodesSupported()) l.info(s);
       else l.info(filterAnsi(s));
   }
 
   void warn(String s)
   {
     for(Logger l : loggers)
-      if(color && l.ansiCodesSupported()) l.warn(s);
+      if(settings.color && l.ansiCodesSupported()) l.warn(s);
       else l.warn(filterAnsi(s));
   }
 
   private void logStackTrace(Throwable t)
   {
     StackTraceElement[] trace = t.getStackTrace();
-    String testFileName = color ? findTestFileName(trace) : null;
+    String testFileName = settings.color ? findTestFileName(trace) : null;
     logStackTracePart(trace, trace.length-1, 0, t, testFileName);
   }
 
@@ -115,11 +115,13 @@ final class RichLogger
 
   private String stackTraceElementToString(StackTraceElement e, String testFileName)
   {
-    boolean highlight = color && (
+    boolean highlight = settings.color && (
         testClassName.equals(e.getClassName()) ||
         (testFileName != null && testFileName.equals(e.getFileName()))
       );
-    StringBuilder b = new StringBuilder().append(e.getClassName()).append('.').append(e.getMethodName()).append('(');
+    StringBuilder b = new StringBuilder();
+    b.append(settings.decodeName(e.getClassName() + '.' + e.getMethodName()));
+    b.append('(');
 
     if(e.isNativeMethod()) b.append(c("Native Method", highlight ? TESTFILE2 : null));
     else if(e.getFileName() == null) b.append(c("Unknown Source", highlight ? TESTFILE2 : null));
@@ -131,4 +133,5 @@ final class RichLogger
     }
     return b.append(')').toString();
   }
+
 }

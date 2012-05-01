@@ -37,11 +37,17 @@ The following options are supported for JUnit tests:
   -n  Do not use ANSI colors in the output even if sbt reports that they are
       supported. 
 
+  -s  Try to decode Scala names in stack traces and test names. Fall back
+      silently to non-decoded names if no matching Scala library is on the
+      class path.
+
   +v  Turn off -v. Takes precedence over -v.
 
   +q  Turn off -q. Takes precedence over -q.
 
   +n  Turn off -n. Takes precedence over -n.
+
+  +s  Turn off -s. Takes precedence over -s.
 
   -tests=<REGEXPS>  Run only the tests whose names match one of the specified
       regular expressions (in a comma-separated list). Non-matched tests are

@@ -17,45 +17,63 @@ final class EventDispatcher extends RunListener
   private final RichLogger logger;
   private final HashSet<String> reported = new HashSet<String>();
   private final EventHandler handler;
-  private final boolean quiet, verbose;
+  private final RunSettings settings;
   private OutputCapture capture;
 
-  EventDispatcher(RichLogger logger, EventHandler handler, boolean quiet, boolean verbose)
+  EventDispatcher(RichLogger logger, EventHandler handler, RunSettings settings)
   {
     this.logger = logger;
     this.handler = handler;
-    this.quiet = quiet;
-    this.verbose = verbose;
+    this.settings = settings;
   }
 
   @Override
-  public void testAssumptionFailure(Failure failure)
+  public void testAssumptionFailure(final Failure failure)
   {
     uncapture(true);
-    postIfFirst(new TestAssumptionFailedEvent(failure));
+    postIfFirst(new AbstractEvent(settings.buildErrorName(failure.getDescription()), failure.getMessage(), org.scalatools.testing.Result.Skipped, failure.getException()) {
+      void logTo(RichLogger logger) {
+        logger.warn("Test assumption in test "+ansiName+" failed: "+failure.getMessage());
+      }
+    });
   }
 
   @Override
-  public void testFailure(Failure failure)
+  public void testFailure(final Failure failure)
   {
     uncapture(true);
-    postIfFirst(new TestFailedEvent(failure));
+    postIfFirst(new AbstractEvent(settings.buildErrorName(failure.getDescription()), failure.getMessage(), org.scalatools.testing.Result.Failure, failure.getException()) {
+      void logTo(RichLogger logger) {
+        logger.error("Test "+ansiName+" failed: "+failure.getMessage(), error);
+      }
+    });
   }
 
   @Override
   public void testFinished(Description desc)
   {
     uncapture(false);
-    postIfFirst(new TestFinishedEvent(desc));
+    postIfFirst(new AbstractEvent(settings.buildInfoName(desc), null, org.scalatools.testing.Result.Success, null) {
+      void logTo(RichLogger logger) {
+        logger.debug("Test "+ansiName+" finished");
+      }
+    });
   }
 
   @Override
-  public void testIgnored(Description desc) { postIfFirst(new TestIgnoredEvent(desc)); }
+  public void testIgnored(Description desc)
+  {
+    postIfFirst(new AbstractEvent(settings.buildInfoName(desc), null, org.scalatools.testing.Result.Skipped, null) {
+      void logTo(RichLogger logger) {
+        logger.info("Test "+ansiName+" ignored");
+      }
+    });
+  }
 
   @Override
   public void testStarted(Description description)
   {
-    debugOrInfo("Test "+AbstractEvent.buildInfoName(description)+" started");
+    debugOrInfo("Test "+settings.buildInfoName(description)+" started");
     capture();
   }
 
@@ -75,6 +93,15 @@ final class EventDispatcher extends RunListener
     debugOrInfo(c("Test run started", INFO));
   }
 
+  void testExecutionFailed(String testName, Throwable err)
+  {
+    post(new AbstractEvent(Ansi.c(testName, Ansi.ERRMSG), "Test execution failed", org.scalatools.testing.Result.Error, err) {
+      void logTo(RichLogger logger) {
+        logger.error("Execution of test "+ansiName+" failed", error);
+      }
+    });
+  }
+
   private void postIfFirst(AbstractEvent e)
   {
     e.logTo(logger);
@@ -89,13 +116,13 @@ final class EventDispatcher extends RunListener
 
   private void capture()
   {
-    if(quiet && capture == null)
+    if(settings.quiet && capture == null)
       capture = OutputCapture.start();
   }
 
   void uncapture(boolean replay)
   {
-    if(quiet && capture != null)
+    if(settings.quiet && capture != null)
     {
       capture.stop();
       if(replay)
@@ -109,7 +136,7 @@ final class EventDispatcher extends RunListener
 
   private void debugOrInfo(String msg)
   {
-    if(verbose) logger.info(msg);
+    if(settings.verbose) logger.info(msg);
     else logger.debug(msg);
   }
 }
