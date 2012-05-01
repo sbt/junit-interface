@@ -8,15 +8,17 @@ import org.scalatools.testing.Runner;
 
 public final class JUnitFramework implements Framework
 {
-  private static final Fingerprint[] FINGERPRINTS =
-          new Fingerprint[] { new JUnitFingerprint(), new JUnit3Fingerprint() };
+  private static final Fingerprint[] FINGERPRINTS = new Fingerprint[] {
+    new JUnitFingerprint(),
+    new JUnit3Fingerprint(),
+    new RunWithFingerprint()
+  };
 
   @Override
   public String name() { return "JUnit"; }
 
   @Override
-  public Runner testRunner(ClassLoader testClassLoader, Logger[] loggers)
-  {
+  public Runner testRunner(ClassLoader testClassLoader, Logger[] loggers) {
     return new JUnitRunner(testClassLoader, loggers);
   }
 

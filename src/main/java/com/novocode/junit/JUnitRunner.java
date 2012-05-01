@@ -68,9 +68,12 @@ final class JUnitRunner extends Runner2
       try
       {
         Class<?> cl = testClassLoader.loadClass(testClassName);
-        Request request = Request.classes(cl);
-        if(testFilter.length() > 0) request = request.filterWith(new JUnitFilter(testFilter, ed));
-        try { ju.run(request); } finally { ed.uncapture(true); }
+        if(((AbstractFingerprint)fingerprint).shouldRun(cl))
+        {
+          Request request = Request.classes(cl);
+          if(testFilter.length() > 0) request = request.filterWith(new JUnitFilter(testFilter, ed));
+          try { ju.run(request); } finally { ed.uncapture(true); }
+        }
       }
       catch(Exception ex) { ed.post(new TestExecutionFailedEvent(testClassName, ex)); }
     }
