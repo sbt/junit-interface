@@ -1,8 +1,12 @@
-bin/
-.manager/
+/bin/
 *.class
-lib_managed
+/lib_managed
 project/boot
-project/build/target
 target
 .scala_dependencies
+/\.target/
+/\.cache
+/\.project
+/\.classpath
+/\.settings/
+/\.manager/
