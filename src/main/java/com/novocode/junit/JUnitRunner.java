@@ -1,10 +1,14 @@
 package com.novocode.junit;
 
+import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 
+import junit.framework.TestCase;
+
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
+import org.junit.runner.RunWith;
 import org.scalatools.testing.EventHandler;
 import org.scalatools.testing.Fingerprint;
 import org.scalatools.testing.Logger;
@@ -73,7 +77,7 @@ final class JUnitRunner extends Runner2
       try
       {
         Class<?> cl = testClassLoader.loadClass(testClassName);
-        if(((AbstractFingerprint)fingerprint).shouldRun(cl))
+        if(shouldRun(fingerprint, cl))
         {
           Request request = Request.classes(cl);
           if(testFilter.length() > 0) request = request.filterWith(new JUnitFilter(testFilter, ed));
@@ -93,5 +97,19 @@ final class JUnitRunner extends Runner2
         }
       }
     }
+  }
+
+  private static final Fingerprint JUNIT_FP = new JUnitFingerprint();
+
+  private static boolean shouldRun(Fingerprint fingerprint, Class<?> clazz)
+  {
+    if(fingerprint.equals(JUNIT_FP)) {
+      // Ignore classes which are matched by the other fingerprints
+      if(TestCase.class.isAssignableFrom(clazz)) return false;
+      for(Annotation a : clazz.getDeclaredAnnotations()) {
+        if(a.annotationType().equals(RunWith.class)) return false;
+      }
+      return true;
+    } else return true;
   }
 }
