@@ -103,7 +103,7 @@ final class JUnitRunner extends Runner2
 
   private static boolean shouldRun(Fingerprint fingerprint, Class<?> clazz)
   {
-    if(fingerprint.equals(JUNIT_FP)) {
+    if(JUNIT_FP.equals(fingerprint)) {
       // Ignore classes which are matched by the other fingerprints
       if(TestCase.class.isAssignableFrom(clazz)) return false;
       for(Annotation a : clazz.getDeclaredAnnotations()) {
