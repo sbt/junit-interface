@@ -6,7 +6,7 @@ version := "0.9-SNAPSHOT"
 
 crossPaths := false
 
-libraryDependencies += "junit" % "junit" % "4.8.2"
+libraryDependencies += "junit" % "junit-dep" % "4.8.2"
 
 libraryDependencies += "org.scala-tools.testing" % "test-interface" % "0.5"
 
