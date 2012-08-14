@@ -12,7 +12,7 @@ libraryDependencies += "org.scala-tools.testing" % "test-interface" % "0.5"
 
 autoScalaLibrary := false
 
-javacOptions ++= List("-target", "1.5", "-source", "1.5")
+javacOptions in compile ++= List("-target", "1.5", "-source", "1.5")
 
 publishTo := Some(Resolver.file("test", file("c:/temp/repo/")))
 //publishTo := Some("snapshots" at "https://oss.sonatype.org/content/repositories/snapshots")
