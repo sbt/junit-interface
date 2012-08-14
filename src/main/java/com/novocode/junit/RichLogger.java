@@ -1,5 +1,6 @@
 package com.novocode.junit;
 
+import java.util.Stack;
 import org.scalatools.testing.Logger;
 import static com.novocode.junit.Ansi.*;
 
@@ -8,13 +9,21 @@ final class RichLogger
 {
   private final Logger[] loggers;
   private final RunSettings settings;
-  private final String testClassName;
+  /* The top element is the test class of the currently executing test */
+  private final Stack<String> currentTestClassName = new Stack<String>();
 
   RichLogger(Logger[] loggers, RunSettings settings, String testClassName)
   {
     this.loggers = loggers;
     this.settings = settings;
-    this.testClassName = testClassName;
+    currentTestClassName.push(testClassName);
+  }
+
+  void pushCurrentTestClassName(String s) { currentTestClassName.push(s); }
+  
+  void popCurrentTestClassName()
+  {
+    if(currentTestClassName.size() > 1) currentTestClassName.pop();
   }
 
   void debug(String s)
@@ -54,11 +63,12 @@ final class RichLogger
   private void logStackTrace(Throwable t)
   {
     StackTraceElement[] trace = t.getStackTrace();
-    String testFileName = settings.color ? findTestFileName(trace) : null;
-    logStackTracePart(trace, trace.length-1, 0, t, testFileName);
+    String testClassName = currentTestClassName.peek();
+    String testFileName = settings.color ? findTestFileName(trace, testClassName) : null;
+    logStackTracePart(trace, trace.length-1, 0, t, testClassName, testFileName);
   }
 
-  private void logStackTracePart(StackTraceElement[] trace, int m, int framesInCommon, Throwable t, String testFileName)
+  private void logStackTracePart(StackTraceElement[] trace, int m, int framesInCommon, Throwable t, String testClassName, String testFileName)
   {
     final int m0 = m;
     int top = 0;
@@ -80,7 +90,7 @@ final class RichLogger
         }
       }
     }
-    for(int i=top; i<=m; i++) error("    at " + stackTraceElementToString(trace[i], testFileName));
+    for(int i=top; i<=m; i++) error("    at " + stackTraceElementToString(trace[i], testClassName, testFileName));
     if(m0 != m)
     {
       // skip junit-related frames
@@ -91,10 +101,10 @@ final class RichLogger
       // skip frames that were in the previous trace too
       error("    ... " + framesInCommon + " more");
     }
-    logStackTraceAsCause(trace, t.getCause(), testFileName);
+    logStackTraceAsCause(trace, t.getCause(), testClassName, testFileName);
   }
 
-  private void logStackTraceAsCause(StackTraceElement[] causedTrace, Throwable t, String testFileName)
+  private void logStackTraceAsCause(StackTraceElement[] causedTrace, Throwable t, String testClassName, String testFileName)
   {
     if(t == null) return;
     StackTraceElement[] trace = t.getStackTrace();
@@ -105,10 +115,10 @@ final class RichLogger
       n--;
     }
     error("Caused by: " + t);
-    logStackTracePart(trace, m, trace.length-1-m, t, testFileName);
+    logStackTracePart(trace, m, trace.length-1-m, t, testClassName, testFileName);
   }
 
-  private String findTestFileName(StackTraceElement[] trace)
+  private String findTestFileName(StackTraceElement[] trace, String testClassName)
   {
     for(StackTraceElement e : trace)
     {
@@ -118,7 +128,7 @@ final class RichLogger
     return null;
   }
 
-  private String stackTraceElementToString(StackTraceElement e, String testFileName)
+  private String stackTraceElementToString(StackTraceElement e, String testClassName, String testFileName)
   {
     boolean highlight = settings.color && (
         testClassName.equals(e.getClassName()) ||

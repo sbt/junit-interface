@@ -58,6 +58,7 @@ final class EventDispatcher extends RunListener
         logger.debug("Test "+ansiName+" finished");
       }
     });
+    logger.popCurrentTestClassName();
   }
 
   @Override
@@ -73,6 +74,7 @@ final class EventDispatcher extends RunListener
   @Override
   public void testStarted(Description description)
   {
+    logger.pushCurrentTestClassName(description.getClassName());
     debugOrInfo("Test "+settings.buildInfoName(description)+" started");
     capture();
   }
