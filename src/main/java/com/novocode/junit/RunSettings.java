@@ -49,6 +49,10 @@ class RunSettings {
     return buildColoredName(desc, ENAME1, ENAME2, ENAME3);
   }
 
+  String buildPlainName(Description desc) {
+    return buildColoredName(desc, null, null, null);
+  }
+
   private String buildColoredName(Description desc, String c1, String c2, String c3) {
     StringBuilder b = new StringBuilder();
     

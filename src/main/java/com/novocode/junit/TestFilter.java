@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
 
-public final class JUnitFilter extends Filter
+public final class TestFilter extends Filter
 {
   private static final String DELIMITER = "\\,";
 
@@ -15,7 +15,7 @@ public final class JUnitFilter extends Filter
   private final String[] testPatterns;
   private final EventDispatcher ed;
 
-  public JUnitFilter(String testFilter, EventDispatcher ed)
+  public TestFilter(String testFilter, EventDispatcher ed)
   {
     this.ed = ed;
     this.testPatterns = testFilter.split(DELIMITER);

@@ -67,6 +67,12 @@ The following options are supported for JUnit tests:
       serially and not perform any other tasks in parallel which depend on
       the modified property.
 
+  Any parameter not starting with - or + is treated as a glob pattern for
+  matching tests. Unlike the patterns given directly to sbt's "test-only"
+  command, the patterns given to junit-interface will match against the full
+  test names (as displayed by junit-interface) of all atomic test cases, so
+  you can match on test methods and parts of suites with custom runners.
+
 In sbt 0.10+, you can set default options in your build.sbt file:
 
   testOptions += Tests.Argument(TestFrameworks.JUnit, "-q", "-v")
@@ -79,4 +85,4 @@ In sbt 0.7, add the following to your project:
 
 Or use them with the test-quick and test-only commands:
 
-  test-only -- +q +v
+  test-only -- +q +v *Sequence*h2mem*

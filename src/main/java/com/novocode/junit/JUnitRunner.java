@@ -1,6 +1,7 @@
 package com.novocode.junit;
 
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -32,6 +33,7 @@ final class JUnitRunner extends Runner2
   {
     boolean quiet = false, verbose = false, nocolor = false, decodeScalaNames = false, logAssert = false;
     HashMap<String, String> sysprops = new HashMap<String, String>();
+    ArrayList<String> globPatterns = new ArrayList<String>();
     String testFilter = "";
     for(String s : args)
     {
@@ -46,6 +48,7 @@ final class JUnitRunner extends Runner2
         int sep = s.indexOf('=');
         sysprops.put(s.substring(2, sep), s.substring(sep+1));
       }
+      else if(!s.startsWith("-") && !s.startsWith("+")) globPatterns.add(s);
     }
     for(String s : args)
     {
@@ -80,7 +83,8 @@ final class JUnitRunner extends Runner2
         if(shouldRun(fingerprint, cl))
         {
           Request request = Request.classes(cl);
-          if(testFilter.length() > 0) request = request.filterWith(new JUnitFilter(testFilter, ed));
+          if(globPatterns.size() > 0) request = request.filterWith(new GlobFilter(settings, globPatterns));
+          if(testFilter.length() > 0) request = request.filterWith(new TestFilter(testFilter, ed));
           try { ju.run(request); } finally { ed.uncapture(true); }
         }
       }
