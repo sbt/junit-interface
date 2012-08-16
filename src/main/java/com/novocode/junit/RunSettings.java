@@ -62,17 +62,18 @@ class RunSettings {
       b.append(c(cn.substring(pos2+1), c1));
     }
 
-    b.append('.');
-
     String m = desc.getMethodName();
-    int mpos1 = m.lastIndexOf('[');
-    int mpos2 = m.lastIndexOf(']');
-    if(mpos1 == -1 || mpos2 < mpos1) b.append(c(decodeName(m), c2));
-    else {
-      b.append(c(decodeName(m.substring(0, mpos1)), c2));
-      b.append('[');
-      b.append(c(m.substring(mpos1+1, mpos2), c3));
-      b.append(']');
+    if(m != null) {
+      b.append('.');
+      int mpos1 = m.lastIndexOf('[');
+      int mpos2 = m.lastIndexOf(']');
+      if(mpos1 == -1 || mpos2 < mpos1) b.append(c(decodeName(m), c2));
+      else {
+        b.append(c(decodeName(m.substring(0, mpos1)), c2));
+        b.append('[');
+        b.append(c(m.substring(mpos1+1, mpos2), c3));
+        b.append(']');
+      }
     }
 
     return b.toString();
