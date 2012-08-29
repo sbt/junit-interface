@@ -10,11 +10,11 @@ See LICENSE.txt for licensing conditions (BSD-style).
 
 To use with sbt 0.10+, add the following dependency to your build.sbt:
 
-  libraryDependencies += "com.novocode" % "junit-interface" % "0.9-RC3" % "test"
+  libraryDependencies += "com.novocode" % "junit-interface" % "0.10-M1" % "test"
 
 To use with sbt 0.7, add the following dependency to your project:
 
-  val junitInterface = "com.novocode" % "junit-interface" % "0.9-RC3" % "test"
+  val junitInterface = "com.novocode" % "junit-interface" % "0.10-M1" % "test"
 
 JUnit itself is automatically pulled in as a transitive dependency. sbt
 already knows about junit-interface so the dependency alone is enough. You do
