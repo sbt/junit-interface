@@ -10,6 +10,7 @@ import junit.framework.TestCase;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.junit.runner.RunWith;
+import org.junit.runner.manipulation.NoTestsRemainException;
 import org.scalatools.testing.EventHandler;
 import org.scalatools.testing.Fingerprint;
 import org.scalatools.testing.Logger;
@@ -83,8 +84,8 @@ final class JUnitRunner extends Runner2
         if(shouldRun(fingerprint, cl))
         {
           Request request = Request.classes(cl);
-          if(globPatterns.size() > 0) request = request.filterWith(new GlobFilter(settings, globPatterns));
-          if(testFilter.length() > 0) request = request.filterWith(new TestFilter(testFilter, ed));
+          if(globPatterns.size() > 0) request = new SilentFilterRequest(request, new GlobFilter(settings, globPatterns));
+          if(testFilter.length() > 0) request = new SilentFilterRequest(request, new TestFilter(testFilter, ed));
           try { ju.run(request); } finally { ed.uncapture(true); }
         }
       }
