@@ -2,7 +2,7 @@ name := "JUnit-Interface"
 
 organization := "com.novocode"
 
-version := "0.9-SNAPSHOT"
+version := "0.10-SNAPSHOT"
 
 crossPaths := false
 
