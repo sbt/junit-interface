@@ -9,19 +9,24 @@ import static com.novocode.junit.Ansi.NNAME3;
 import static com.novocode.junit.Ansi.c;
 
 import java.lang.reflect.Method;
+import java.util.HashSet;
 
 import org.junit.runner.Description;
 
 class RunSettings {
   final boolean color, quiet, verbose, logAssert;
   private final boolean decodeScalaNames;
+  private final HashSet<String> ignoreRunners = new HashSet<String>(); 
 
-  RunSettings(boolean color, boolean decodeScalaNames, boolean quiet, boolean verbose, boolean logAssert) {
+  RunSettings(boolean color, boolean decodeScalaNames, boolean quiet,
+      boolean verbose, boolean logAssert, String ignoreRunners) {
     this.color = color;
     this.decodeScalaNames = decodeScalaNames;
     this.quiet = quiet;
     this.verbose = verbose;
     this.logAssert = logAssert;
+    for(String s : ignoreRunners.split(","))
+      this.ignoreRunners.add(s.trim());
   }
 
   String decodeName(String name) {
@@ -82,4 +87,6 @@ class RunSettings {
 
     return b.toString();
   }
+
+  boolean ignoreRunner(String cln) { return ignoreRunners.contains(cln); }
 }

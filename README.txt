@@ -55,6 +55,10 @@ The following options are supported for JUnit tests:
 
   +a  Turn off -a. Takes precedence over -a.
 
+  --ignore-runners=<COMMA-SEPARATED-STRINGS>  Ignore tests with a @RunWith
+      annotation if the Runner class name is contained in this list. The
+      default value is "org.junit.runners.Suite".
+
   --tests=<REGEXPS>  Run only the tests whose names match one of the specified
       regular expressions (in a comma-separated list). Non-matched tests are
       ignored. Only individual test cases are matched, not test classes. Use
