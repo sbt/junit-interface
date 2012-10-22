@@ -55,7 +55,7 @@ The following options are supported for JUnit tests:
 
   +a  Turn off -a. Takes precedence over -a.
 
-  -tests=<REGEXPS>  Run only the tests whose names match one of the specified
+  --tests=<REGEXPS>  Run only the tests whose names match one of the specified
       regular expressions (in a comma-separated list). Non-matched tests are
       ignored. Only individual test cases are matched, not test classes. Use
       sbt's "test-only" command instead to match test classes.

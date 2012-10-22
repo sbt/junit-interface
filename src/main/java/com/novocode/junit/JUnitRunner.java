@@ -43,7 +43,12 @@ final class JUnitRunner extends Runner2
       else if("-n".equals(s)) nocolor = true;
       else if("-s".equals(s)) decodeScalaNames = true;
       else if("-a".equals(s)) logAssert = true;
-      else if(s.startsWith("-tests=")) testFilter = s.substring(7);
+      else if(s.startsWith("-tests=")) {
+        for(Logger l : loggers)
+          l.warn("junit-interface option \"-tests\" is deprecated. Use \"--tests\" instead.");
+        testFilter = s.substring(7);
+      }
+      else if(s.startsWith("--tests=")) testFilter = s.substring(8); 
       else if(s.startsWith("-D") && s.contains("="))
       {
         int sep = s.indexOf('=');
