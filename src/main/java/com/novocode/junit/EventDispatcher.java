@@ -33,7 +33,7 @@ final class EventDispatcher extends RunListener
     uncapture(true);
     postIfFirst(new AbstractEvent(settings.buildErrorName(failure.getDescription()), failure.getMessage(), org.scalatools.testing.Result.Skipped, failure.getException()) {
       void logTo(RichLogger logger) {
-        logger.warn("Test assumption in test "+ansiName+" failed: "+failure.getMessage());
+        logger.warn("Test assumption in test "+ansiName+" failed: "+ failureErrorMessage(failure));
       }
     });
   }
@@ -44,7 +44,7 @@ final class EventDispatcher extends RunListener
     uncapture(true);
     postIfFirst(new AbstractEvent(settings.buildErrorName(failure.getDescription()), failure.getMessage(), org.scalatools.testing.Result.Failure, failure.getException()) {
       void logTo(RichLogger logger) {
-        logger.error("Test "+ansiName+" failed: "+failure.getMessage(), error);
+        logger.error("Test "+ansiName+" failed: "+ failureErrorMessage(failure), error);
       }
     });
   }
@@ -136,9 +136,16 @@ final class EventDispatcher extends RunListener
     }
   }
 
+  private String failureErrorMessage(Failure failure) {
+    String exceptionType = failure.getException().getClass().getName();
+    return exceptionType + ": " + failure.getMessage(); 
+  }
+
   private void debugOrInfo(String msg)
   {
     if(settings.verbose) logger.info(msg);
     else logger.debug(msg);
   }
+
+
 }
