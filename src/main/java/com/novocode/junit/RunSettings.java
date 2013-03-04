@@ -14,17 +14,19 @@ import java.util.HashSet;
 import org.junit.runner.Description;
 
 class RunSettings {
-  final boolean color, quiet, verbose, logAssert;
+  final boolean color, quiet, verbose, logAssert, logExceptionClass;
   private final boolean decodeScalaNames;
   private final HashSet<String> ignoreRunners = new HashSet<String>(); 
 
   RunSettings(boolean color, boolean decodeScalaNames, boolean quiet,
-      boolean verbose, boolean logAssert, String ignoreRunners) {
+      boolean verbose, boolean logAssert, String ignoreRunners,
+      boolean logExceptionClass) {
     this.color = color;
     this.decodeScalaNames = decodeScalaNames;
     this.quiet = quiet;
     this.verbose = verbose;
     this.logAssert = logAssert;
+    this.logExceptionClass = logExceptionClass;
     for(String s : ignoreRunners.split(","))
       this.ignoreRunners.add(s.trim());
   }
@@ -56,6 +58,33 @@ class RunSettings {
 
   String buildPlainName(Description desc) {
     return buildColoredName(desc, null, null, null);
+  }
+
+  String buildColoredMessage(Throwable t, String c1) {
+    if(t == null) return "null";
+    if(!logExceptionClass || (!logAssert && (t instanceof AssertionError)))  return t.getMessage();
+    StringBuilder b = new StringBuilder();
+
+    String cn = decodeName(t.getClass().getName());
+    int pos1 = cn.indexOf('$');
+    int pos2 = pos1 == -1 ? cn.lastIndexOf('.') : cn.lastIndexOf('.', pos1);
+    if(pos2 == -1) b.append(c(cn, c1));
+    else {
+      b.append(cn.substring(0, pos2));
+      b.append('.');
+      b.append(c(cn.substring(pos2+1), c1));
+    }
+
+    b.append(": ").append(t.getMessage());
+    return b.toString();
+  }
+
+  String buildInfoMessage(Throwable t) {
+    return buildColoredMessage(t, NNAME2);
+  }
+
+  String buildErrorMessage(Throwable t) {
+    return buildColoredMessage(t, ENAME2);
   }
 
   private String buildColoredName(Description desc, String c1, String c2, String c3) {

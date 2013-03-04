@@ -45,6 +45,9 @@ The following options are supported for JUnit tests:
       JUnit). Without these options, failed assertions do not print a stack
       trace.
 
+  -c  Prefix error messages with exception class name. AssertionErrors are
+      excluded from this unless -a is also specified.
+
   +v  Turn off -v. Takes precedence over -v.
 
   +q  Turn off -q. Takes precedence over -q.
@@ -54,6 +57,8 @@ The following options are supported for JUnit tests:
   +s  Turn off -s. Takes precedence over -s.
 
   +a  Turn off -a. Takes precedence over -a.
+
+  +c  Turn off -c. Takes precedence over -c.
 
   --ignore-runners=<COMMA-SEPARATED-STRINGS>  Ignore tests with a @RunWith
       annotation if the Runner class name is contained in this list. The

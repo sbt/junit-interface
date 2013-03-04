@@ -7,14 +7,14 @@ import static com.novocode.junit.Ansi.*;
 abstract class AbstractEvent implements Event
 {
   protected final String ansiName;
-  protected final String msg;
+  protected final String ansiMsg;
   protected final Result result;
   protected final Throwable error;
 
-  AbstractEvent(String ansiName, String msg, Result result, Throwable error)
+  AbstractEvent(String ansiName, String ansiMsg, Result result, Throwable error)
   {
     this.ansiName = ansiName;
-    this.msg = msg;
+    this.ansiMsg = ansiMsg;
     this.result = result;
     this.error = error;
   }
@@ -23,7 +23,7 @@ abstract class AbstractEvent implements Event
   public final String testName() { return filterAnsi(ansiName); }
 
   @Override
-  public final String description() { return msg; }
+  public final String description() { return filterAnsi(ansiMsg); }
 
   @Override
   public final Result result() { return result; }

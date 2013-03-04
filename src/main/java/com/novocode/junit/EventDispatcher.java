@@ -31,9 +31,9 @@ final class EventDispatcher extends RunListener
   public void testAssumptionFailure(final Failure failure)
   {
     uncapture(true);
-    postIfFirst(new AbstractEvent(settings.buildErrorName(failure.getDescription()), failure.getMessage(), org.scalatools.testing.Result.Skipped, failure.getException()) {
+    postIfFirst(new AbstractEvent(settings.buildErrorName(failure.getDescription()), settings.buildErrorMessage(failure.getException()), org.scalatools.testing.Result.Skipped, failure.getException()) {
       void logTo(RichLogger logger) {
-        logger.warn("Test assumption in test "+ansiName+" failed: "+failure.getMessage());
+        logger.warn("Test assumption in test "+ansiName+" failed: "+ansiMsg);
       }
     });
   }
@@ -42,9 +42,9 @@ final class EventDispatcher extends RunListener
   public void testFailure(final Failure failure)
   {
     uncapture(true);
-    postIfFirst(new AbstractEvent(settings.buildErrorName(failure.getDescription()), failure.getMessage(), org.scalatools.testing.Result.Failure, failure.getException()) {
+    postIfFirst(new AbstractEvent(settings.buildErrorName(failure.getDescription()), settings.buildErrorMessage(failure.getException()), org.scalatools.testing.Result.Failure, failure.getException()) {
       void logTo(RichLogger logger) {
-        logger.error("Test "+ansiName+" failed: "+failure.getMessage(), error);
+        logger.error("Test "+ansiName+" failed: "+ansiMsg, error);
       }
     });
   }

@@ -10,3 +10,5 @@ target
 /\.classpath
 /\.settings/
 /\.manager/
+/\.idea/
+/\.idea_modules/
