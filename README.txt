@@ -41,12 +41,12 @@ The following options are supported for JUnit tests:
       silently to non-decoded names if no matching Scala library is on the
       class path.
 
-  -a  Log stack traces for AssertionErrors (thrown by all assert* methods in
-      JUnit). Without these options, failed assertions do not print a stack
-      trace.
+  -a  Show stack traces and exception class name for AssertionErrors (thrown
+      by all assert* methods in JUnit). Without this option, failed assertions
+      do not print a stack trace or the "java.lang.AssertionError: " prefix.
 
-  -c  Prefix error messages with exception class name. AssertionErrors are
-      excluded from this unless -a is also specified.
+  -c  Do not print the exception class name prefix for any messages. With this
+      option, only the result of getMessage() plus a stack trace is shown.
 
   +v  Turn off -v. Takes precedence over -v.
 

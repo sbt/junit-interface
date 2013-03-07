@@ -31,7 +31,7 @@ final class JUnitRunner extends Runner2 {
   @Override
   public void run(String testClassName, Fingerprint fingerprint, EventHandler eventHandler, String [] args) {
     boolean quiet = false, verbose = false, nocolor = false, decodeScalaNames = false,
-            logAssert = false, logExceptionClass = false;
+            logAssert = false, logExceptionClass = true;
     HashMap<String, String> sysprops = new HashMap<String, String>();
     ArrayList<String> globPatterns = new ArrayList<String>();
     String testFilter = "";
@@ -42,7 +42,7 @@ final class JUnitRunner extends Runner2 {
       else if("-n".equals(s)) nocolor = true;
       else if("-s".equals(s)) decodeScalaNames = true;
       else if("-a".equals(s)) logAssert = true;
-      else if("-c".equals(s)) logExceptionClass = true;
+      else if("-c".equals(s)) logExceptionClass = false;
       else if(s.startsWith("-tests=")) {
         for(Logger l : loggers)
           l.warn("junit-interface option \"-tests\" is deprecated. Use \"--tests\" instead.");
@@ -62,7 +62,7 @@ final class JUnitRunner extends Runner2 {
       else if("+n".equals(s)) nocolor = false;
       else if("+s".equals(s)) decodeScalaNames = false;
       else if("+a".equals(s)) logAssert = false;
-      else if("+c".equals(s)) logExceptionClass = false;
+      else if("+c".equals(s)) logExceptionClass = true;
     }
     RunSettings settings =
         new RunSettings(!nocolor, decodeScalaNames, quiet, verbose, logAssert, ignoreRunners, logExceptionClass);
