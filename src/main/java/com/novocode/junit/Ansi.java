@@ -22,6 +22,7 @@ public class Ansi {
 
   public static String filterAnsi(String s)
   {
+    if(s == null) return null;
     StringBuilder b = new StringBuilder(s.length());
     int len = s.length();
     for(int i=0; i<len; i++)
