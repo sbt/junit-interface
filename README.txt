@@ -76,6 +76,10 @@ The following options are supported for JUnit tests:
       serially and not perform any other tasks in parallel which depend on
       the modified property.
 
+  --run-listener=<CLASS_NAME>  A (user defined) class which extends
+      org.junit.runner.notification.RunListener. An instance of this class is
+      created and added to the JUnit Runner, so that it will receive the run events. For more information, see .
+
   Any parameter not starting with - or + is treated as a glob pattern for
   matching tests. Unlike the patterns given directly to sbt's "test-only"
   command, the patterns given to junit-interface will match against the full
