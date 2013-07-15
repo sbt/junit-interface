@@ -20,7 +20,7 @@ final class RichLogger
   }
 
   void pushCurrentTestClassName(String s) { currentTestClassName.push(s); }
-  
+
   void popCurrentTestClassName()
   {
     if(currentTestClassName.size() > 1) currentTestClassName.pop();
@@ -74,7 +74,7 @@ final class RichLogger
     int top = 0;
     for(int i=top; i<=m; i++)
     {
-      if(trace[i].toString().startsWith("org.junit."))
+      if(trace[i].toString().startsWith("org.junit.") || trace[i].toString().startsWith("org.hamcrest."))
       {
         if(i == top) top++;
         else
