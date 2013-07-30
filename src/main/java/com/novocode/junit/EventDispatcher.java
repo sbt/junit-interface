@@ -97,9 +97,9 @@ final class EventDispatcher extends RunListener
 
   void testExecutionFailed(String testName, Throwable err)
   {
-    post(new AbstractEvent(Ansi.c(testName, Ansi.ERRMSG), "Test execution failed", org.scalatools.testing.Result.Error, err) {
+    post(new AbstractEvent(Ansi.c(testName, Ansi.ERRMSG), settings.buildErrorMessage(err), org.scalatools.testing.Result.Error, err) {
       void logTo(RichLogger logger) {
-        logger.error("Execution of test "+ansiName+" failed", error);
+        logger.error("Execution of test "+ansiName+" failed: "+ansiMsg, error);
       }
     });
   }
