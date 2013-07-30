@@ -2,7 +2,7 @@ name := "JUnit-Interface"
 
 organization := "com.novocode"
 
-version := "0.10"
+version := "0.11-SNAPSHOT"
 
 crossPaths := false
 
@@ -15,8 +15,8 @@ autoScalaLibrary := false
 javacOptions in compile ++= List("-target", "1.5", "-source", "1.5")
 
 //publishTo := Some(Resolver.file("test", file("c:/temp/repo/")))
-//publishTo := Some("snapshots" at "https://oss.sonatype.org/content/repositories/snapshots")
-publishTo := Some("releases"  at "https://oss.sonatype.org/service/local/staging/deploy/maven2")
+publishTo := Some("snapshots" at "https://oss.sonatype.org/content/repositories/snapshots")
+//publishTo := Some("releases"  at "https://oss.sonatype.org/service/local/staging/deploy/maven2")
 
 publishMavenStyle := true
 
