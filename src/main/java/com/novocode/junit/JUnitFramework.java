@@ -14,6 +14,10 @@ public final class JUnitFramework implements Framework
     new RunWithFingerprint()
   };
 
+  public JUnitFramework() {
+    Slf4jInitialization.initialize();
+  }
+
   @Override
   public String name() { return "JUnit"; }
 
