@@ -8,7 +8,7 @@ crossPaths := false
 
 libraryDependencies += "junit" % "junit-dep" % "4.10"
 
-libraryDependencies += "org.scala-tools.testing" % "test-interface" % "0.5"
+libraryDependencies += "org.scala-sbt" % "test-interface" % "1.0"
 
 autoScalaLibrary := false
 

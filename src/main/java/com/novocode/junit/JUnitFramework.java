@@ -1,9 +1,7 @@
 package com.novocode.junit;
 
-import org.scalatools.testing.Fingerprint;
-import org.scalatools.testing.Framework;
-import org.scalatools.testing.Logger;
-import org.scalatools.testing.Runner;
+import sbt.testing.Fingerprint;
+import sbt.testing.Framework;
 
 
 public final class JUnitFramework implements Framework
@@ -14,14 +12,20 @@ public final class JUnitFramework implements Framework
     new RunWithFingerprint()
   };
 
+  public JUnitFramework() {
+    Slf4jInitialization.initialize();
+  }
+
   @Override
   public String name() { return "JUnit"; }
 
   @Override
-  public Runner testRunner(ClassLoader testClassLoader, Logger[] loggers) {
-    return new JUnitRunner(testClassLoader, loggers);
+  public sbt.testing.Fingerprint[] fingerprints() {
+    return FINGERPRINTS;
   }
 
   @Override
-  public Fingerprint[] tests() { return FINGERPRINTS; }
+  public sbt.testing.Runner runner(String[] args, String[] remoteArgs, ClassLoader testClassLoader) {
+    return new JUnitRunner(args, remoteArgs, testClassLoader);
+  }
 }

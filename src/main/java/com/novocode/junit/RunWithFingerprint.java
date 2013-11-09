@@ -1,6 +1,6 @@
 package com.novocode.junit;
 
-import org.scalatools.testing.AnnotatedFingerprint;
+import sbt.testing.AnnotatedFingerprint;
 
 
 public class RunWithFingerprint implements AnnotatedFingerprint

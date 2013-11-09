@@ -1,7 +1,7 @@
 package com.novocode.junit;
 
 import java.util.Stack;
-import org.scalatools.testing.Logger;
+import sbt.testing.Logger;
 import static com.novocode.junit.Ansi.*;
 
 
