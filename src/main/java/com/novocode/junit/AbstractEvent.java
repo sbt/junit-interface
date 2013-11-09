@@ -47,7 +47,11 @@ abstract class AbstractEvent implements Event
 
   @Override
   public OptionalThrowable throwable() {
-    return new OptionalThrowable(error);
+    if( error == null ) {
+      return new OptionalThrowable();
+    } else {
+      return new OptionalThrowable(error);
+    }
   }
 
   @Override
