@@ -1,10 +1,6 @@
 package com.novocode.junit;
 
-import org.scalatools.testing.AnnotatedFingerprint;
-
-
-public class RunWithFingerprint implements AnnotatedFingerprint
-{
+public class RunWithFingerprint extends AbstractAnnotatedFingerprint {
   @Override
   public String annotationName() { return "org.junit.runner.RunWith"; }
 
