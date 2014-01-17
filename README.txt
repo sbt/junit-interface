@@ -66,8 +66,9 @@ The following options are supported for JUnit tests:
 
   --tests=<REGEXPS>  Run only the tests whose names match one of the specified
       regular expressions (in a comma-separated list). Non-matched tests are
-      ignored. Only individual test cases are matched, not test classes. Use
-      sbt's "test-only" command instead to match test classes.
+      ignored. Only individual test case names are matched, not test classes.
+      Example: For test MyClassTest.testBasic() only "testBasic" is matched.
+      Use sbt's "test-only" command instead to match test classes.
 
   -Dkey=value Temporarily set a system property for the duration of the test
       run. The property is restored to its previous value after the test has
