@@ -49,3 +49,10 @@ pomExtra :=
   </scm>
 
 // curl -X POST http://ls.implicit.ly/api/1/libraries -d 'user=szeiger&repo=junit-interface&version=0.8'
+
+
+scriptedSettings
+
+scriptedLaunchOpts <+= version apply { v => "-Dproject.version="+v }
+
+resolvers += Resolver.typesafeIvyRepo("releases")
