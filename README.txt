@@ -81,6 +81,8 @@ The following options are supported for JUnit tests:
       org.junit.runner.notification.RunListener. An instance of this class is
       created and added to the JUnit Runner, so that it will receive the run events.
       For more information, see RunListener <http://junit.org/javadoc/latest/org/junit/runner/notification/RunListener.html>.
+      Note: this uses the test-classloader, so the class needs to be defined in src/test
+      or src/main or included as a test or compile dependency
 
   Any parameter not starting with - or + is treated as a glob pattern for
   matching tests. Unlike the patterns given directly to sbt's "test-only"

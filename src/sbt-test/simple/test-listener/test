@@ -1,0 +1,7 @@
+# test that the run listener option works.
+# one test passes, other fails
+-> test
+# Check that file has been created and is correct
+> checkRunListenerFile
+# Debugging.
+> show definedTests
