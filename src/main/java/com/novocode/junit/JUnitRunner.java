@@ -10,6 +10,7 @@ import junit.framework.TestCase;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.junit.runner.RunWith;
+import org.junit.runner.notification.RunListener;
 import sbt.testing.EventHandler;
 import sbt.testing.Fingerprint;
 import sbt.testing.Logger;
@@ -65,6 +66,7 @@ final class JUnitRunner implements Runner {
         ArrayList<String> globPatterns = new ArrayList<String>();
         String testFilter = "";
         String ignoreRunners = "org.junit.runners.Suite";
+        String runListener = null;
         for(String s : args) {
           if("-q".equals(s)) quiet = true;
           else if("-v".equals(s)) verbose = true;
@@ -79,6 +81,7 @@ final class JUnitRunner implements Runner {
           }
           else if(s.startsWith("--tests=")) testFilter = s.substring(8);
           else if(s.startsWith("--ignore-runners=")) ignoreRunners = s.substring(17);
+          else if(s.startsWith("--run-listener=")) runListener = s.substring(15);
           else if(s.startsWith("-D") && s.contains("=")) {
             int sep = s.indexOf('=');
             sysprops.put(s.substring(2, sep), s.substring(sep+1));
@@ -99,6 +102,9 @@ final class JUnitRunner implements Runner {
         EventDispatcher ed = new EventDispatcher(logger, eventHandler, settings, fingerprint);
         JUnitCore ju = new JUnitCore();
         ju.addListener(ed);
+        if (runListener != null) {
+          ju.addListener(createRunListener(runListener));
+        }
 
         HashMap<String, Object> oldprops = new HashMap<String, Object>();
         try {
@@ -132,6 +138,14 @@ final class JUnitRunner implements Runner {
         return new Task[0]; // junit tests do not nest
       }
     };
+  }
+
+  private RunListener createRunListener(String runListenerClassName) {
+    try {
+      return (RunListener) testClassLoader.loadClass(runListenerClassName).newInstance();
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
   }
 
   private static final Fingerprint JUNIT_FP = new JUnitFingerprint();
