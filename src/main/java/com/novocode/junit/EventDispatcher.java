@@ -3,6 +3,7 @@ package com.novocode.junit;
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.io.IOException;
 
 import org.junit.runner.Description;
 import org.junit.runner.Result;
@@ -22,6 +23,7 @@ final class EventDispatcher extends RunListener
   private final ConcurrentHashMap<String, Long> startTimes = new ConcurrentHashMap<String, Long>();
   private final EventHandler handler;
   private final RunSettings settings;
+  private OutputCapture capture;
   private final Fingerprint fingerprint;
 
   EventDispatcher(RichLogger logger, EventHandler handler, RunSettings settings, Fingerprint fingerprint)
@@ -58,6 +60,7 @@ final class EventDispatcher extends RunListener
   @Override
   public void testAssumptionFailure(final Failure failure)
   {
+    uncapture(true);
     postIfFirst(new ErrorEvent(failure, Status.Skipped) {
       void logTo(RichLogger logger) {
         logger.warn("Test assumption in test "+ansiName+" failed: "+ansiMsg + durationSuffix());
@@ -68,6 +71,7 @@ final class EventDispatcher extends RunListener
   @Override
   public void testFailure(final Failure failure)
   {
+    uncapture(true);
     postIfFirst(new ErrorEvent(failure, Status.Failure) {
       void logTo(RichLogger logger) {
         logger.error("Test "+ansiName+" failed: "+ansiMsg + durationSuffix(), error);
@@ -78,6 +82,7 @@ final class EventDispatcher extends RunListener
   @Override
   public void testFinished(Description desc)
   {
+    uncapture(false);
     postIfFirst(new InfoEvent(desc, Status.Success) {
       void logTo(RichLogger logger) {
         logger.debug("Test "+ansiName+" finished" + durationSuffix());
@@ -102,6 +107,7 @@ final class EventDispatcher extends RunListener
     recordStartTime(description);
     logger.pushCurrentTestClassName(description.getClassName());
     debugOrInfo("Test " + settings.buildInfoName(description) + " started");
+    capture();
   }
 
   private void recordStartTime(Description description) {
@@ -152,6 +158,26 @@ final class EventDispatcher extends RunListener
   {
     e.logTo(logger);
     handler.handle(e);
+  }
+
+  private void capture()
+  {
+    if(settings.quiet && capture == null)
+      capture = OutputCapture.start();
+  }
+
+  void uncapture(boolean replay)
+  {
+    if(settings.quiet && capture != null)
+    {
+      capture.stop();
+      if(replay)
+      {
+        try { capture.replay(); }
+        catch(IOException ex) { logger.error("Error replaying captured stdio", ex); }
+      }
+      capture = null;
+    }
   }
 
   private void debugOrInfo(String msg)
