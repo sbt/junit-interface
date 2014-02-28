@@ -14,9 +14,10 @@ autoScalaLibrary := false
 
 javacOptions in compile ++= List("-target", "1.5", "-source", "1.5")
 
-//publishTo := Some(Resolver.file("test", file("c:/temp/repo/")))
-publishTo := Some("snapshots" at "https://oss.sonatype.org/content/repositories/snapshots")
-//publishTo := Some("releases"  at "https://oss.sonatype.org/service/local/staging/deploy/maven2")
+publishTo <<= (version){ v => Some(
+  if(v.trim.endsWith("SNAPSHOT")) "snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+  else "releases"  at "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+)}
 
 publishMavenStyle := true
 
@@ -28,11 +29,11 @@ credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
 
 description := "An implementation of sbt's test interface for JUnit 4"
 
-homepage := Some(url("http://github.com/szeiger/junit-interface/"))
+homepage := Some(url("http://github.com/sbt/junit-interface/"))
 
 startYear := Some(2009)
 
-licenses += ("Two-clause BSD-style license", url("http://github.com/szeiger/junit-interface/blob/master/LICENSE.txt")) 
+licenses += ("Two-clause BSD-style license", url("http://github.com/sbt/junit-interface/blob/master/LICENSE.txt"))
 
 pomExtra :=
   <developers>
@@ -44,8 +45,8 @@ pomExtra :=
     </developer>
   </developers>
   <scm>
-    <url>git@github.com:szeiger/junit-interface.git/</url>
-    <connection>scm:git:git@github.com:szeiger/junit-interface.git</connection>
+    <url>git@github.com:sbt/junit-interface.git/</url>
+    <connection>scm:git:git@github.com:sbt/junit-interface.git</connection>
   </scm>
 
 // curl -X POST http://ls.implicit.ly/api/1/libraries -d 'user=szeiger&repo=junit-interface&version=0.8'
