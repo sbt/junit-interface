@@ -2,7 +2,7 @@ name := "JUnit-Interface"
 
 organization := "com.novocode"
 
-version := "0.11-RC1"
+version := "0.11-SNAPSHOT"
 
 crossPaths := false
 
@@ -55,5 +55,7 @@ pomExtra :=
 scriptedSettings
 
 scriptedLaunchOpts <+= version apply { v => "-Dproject.version="+v }
+
+scriptedLaunchOpts += "-XX:MaxPermSize=256M"
 
 resolvers += Resolver.typesafeIvyRepo("releases")
