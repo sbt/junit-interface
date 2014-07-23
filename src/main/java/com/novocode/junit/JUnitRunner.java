@@ -1,9 +1,7 @@
 package com.novocode.junit;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import junit.framework.TestCase;
 
@@ -64,6 +62,8 @@ final class JUnitRunner implements Runner {
                 logAssert = false, logExceptionClass = true;
         HashMap<String, String> sysprops = new HashMap<String, String>();
         ArrayList<String> globPatterns = new ArrayList<String>();
+        Set<String> includeCategories = new HashSet<String>();
+        Set<String> excludeCategories = new HashSet<String>();
         String testFilter = "";
         String ignoreRunners = "org.junit.runners.Suite";
         String runListener = null;
@@ -82,6 +82,8 @@ final class JUnitRunner implements Runner {
           else if(s.startsWith("--tests=")) testFilter = s.substring(8);
           else if(s.startsWith("--ignore-runners=")) ignoreRunners = s.substring(17);
           else if(s.startsWith("--run-listener=")) runListener = s.substring(15);
+          else if(s.startsWith("--include-categories=")) includeCategories.addAll(Arrays.asList(s.substring(21).split(",")));
+          else if(s.startsWith("--exclude-categories=")) excludeCategories.addAll(Arrays.asList(s.substring(21).split(",")));
           else if(s.startsWith("-D") && s.contains("=")) {
             int sep = s.indexOf('=');
             sysprops.put(s.substring(2, sep), s.substring(sep+1));
@@ -122,6 +124,11 @@ final class JUnitRunner implements Runner {
               Request request = Request.classes(cl);
               if(globPatterns.size() > 0) request = new SilentFilterRequest(request, new GlobFilter(settings, globPatterns));
               if(testFilter.length() > 0) request = new SilentFilterRequest(request, new TestFilter(testFilter, ed));
+              if(!includeCategories.isEmpty() || !excludeCategories.isEmpty()) {
+                request = new SilentFilterRequest(request,
+                        new CategoryFilter(true, loadClasses(testClassLoader, includeCategories), true,
+                                loadClasses(testClassLoader, excludeCategories)));
+              }
               ju.run(request);
             }
           }
@@ -163,6 +170,14 @@ final class JUnitRunner implements Runner {
       if(rw != null) return !settings.ignoreRunner(rw.value().getName());
       else return true;
     }
+  }
+
+  private static Set<Class<?>> loadClasses(ClassLoader classLoader, Set<String> classNames) throws ClassNotFoundException {
+    Set<Class<?>> classes = new HashSet<Class<?>>();
+    for(String className : classNames) {
+      classes.add(classLoader.loadClass(className));
+    }
+    return classes;
   }
 
   @Override
