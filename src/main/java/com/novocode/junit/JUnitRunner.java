@@ -126,7 +126,7 @@ final class JUnitRunner implements Runner {
               if(testFilter.length() > 0) request = new SilentFilterRequest(request, new TestFilter(testFilter, ed));
               if(!includeCategories.isEmpty() || !excludeCategories.isEmpty()) {
                 request = new SilentFilterRequest(request,
-                        new CategoryFilter(true, loadClasses(testClassLoader, includeCategories), true,
+                        CategoryFilter.categoryFilter(true, loadClasses(testClassLoader, includeCategories), true,
                                 loadClasses(testClassLoader, excludeCategories)));
               }
               ju.run(request);
