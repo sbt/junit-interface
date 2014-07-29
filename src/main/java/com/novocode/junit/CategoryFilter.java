@@ -8,7 +8,7 @@ import java.util.*;
 
 /**
  * Copied from https://github.com/junit-team/junit/blob/master/src/main/java/org/junit/experimental/categories/Categories.java,
- * since JUnit 4.11 only supports including/excluding one category at a time, and since it's an experimantal API that
+ * since JUnit 4.11 only supports including/excluding one category at a time, and since it's an experimental API that
  * could change at any time.
  */
 public class CategoryFilter extends Filter {
