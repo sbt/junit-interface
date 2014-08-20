@@ -125,9 +125,14 @@ final class JUnitRunner implements Runner {
               if(globPatterns.size() > 0) request = new SilentFilterRequest(request, new GlobFilter(settings, globPatterns));
               if(testFilter.length() > 0) request = new SilentFilterRequest(request, new TestFilter(testFilter, ed));
               if(!includeCategories.isEmpty() || !excludeCategories.isEmpty()) {
+                // We ignore any ClassNotFoundException when loading these classes since it's likely the user
+                // doesn't expect to see an exception for this. E.g. if we're running tests against multiple projects
+                // then we may have the category class defined in only one of the projects and we shouldn't
+                // spit out errors for the others.
+                Set<Class<?>> includeCategoryClasses = loadClassesSilently(testClassLoader, includeCategories);
+                Set<Class<?>> excludeCategoryClasses = loadClassesSilently(testClassLoader, excludeCategories);
                 request = new SilentFilterRequest(request,
-                        CategoryFilter.categoryFilter(true, loadClasses(testClassLoader, includeCategories), true,
-                                loadClasses(testClassLoader, excludeCategories)));
+                        CategoryFilter.categoryFilter(true, includeCategoryClasses, true, excludeCategoryClasses));
               }
               ju.run(request);
             }
@@ -169,6 +174,17 @@ final class JUnitRunner implements Runner {
       RunWith rw = clazz.getAnnotation(RunWith.class);
       if(rw != null) return !settings.ignoreRunner(rw.value().getName());
       else return true;
+    }
+  }
+
+  /**
+   * Ignores any ClassNotFoundException
+   */
+  private static Set<Class<?>> loadClassesSilently(ClassLoader classLoader, Set<String> classNames) {
+    try {
+      return loadClasses(classLoader, classNames);
+    } catch (ClassNotFoundException e){
+      return new HashSet<Class<?>>();
     }
   }
 
