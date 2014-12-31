@@ -5,6 +5,7 @@ import java.util.*;
 
 import junit.framework.TestCase;
 
+import org.junit.experimental.categories.Categories.CategoryFilter;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Request;
 import org.junit.runner.RunWith;
