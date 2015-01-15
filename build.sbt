@@ -6,7 +6,7 @@ version := "0.11"
 
 crossPaths := false
 
-libraryDependencies += "junit" % "junit" % "4.11"
+libraryDependencies += "junit" % "junit" % "4.12"
 
 libraryDependencies += "org.scala-sbt" % "test-interface" % "1.0"
 
