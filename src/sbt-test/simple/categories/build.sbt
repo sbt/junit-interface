@@ -1,7 +1,5 @@
 name := "test-project"
 
-scalaVersion := "2.10.2"
-
 libraryDependencies += "com.novocode" % "junit-interface" % sys.props("project.version") % "test"
 
 InputKey[Unit]("tests-executed") := {
@@ -27,3 +25,5 @@ InputKey[Unit]("tests-not-executed") := {
 TaskKey[Unit]("reset-tests") := {
   (target.value / "testsrun").delete()
 }
+
+ivyLoggingLevel := UpdateLogging.Quiet
