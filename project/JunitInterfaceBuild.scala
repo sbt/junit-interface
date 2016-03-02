@@ -15,6 +15,8 @@ object EnsimeSbtBuild extends Build {
 
   lazy val root = Project("junit-interface", file(".")).
     settings(scriptedSettings ++ Sensible.settings ++ Seq(
+      // typesafe ivy needed for scripted
+      resolvers += Resolver.typesafeIvyRepo("releases"),
       libraryDependencies ++= Seq(
         "junit" % "junit" % "4.12",
         "org.scala-sbt" % "test-interface" % "1.0"

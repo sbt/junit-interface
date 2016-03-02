@@ -1,0 +1,10 @@
+# this test is only relevant on Windows
+# where stale references to the jars will
+# block file deletion of the jars.
+> test
+$ exists target/scala-2.10/exportjars_2.10-0.1-SNAPSHOT.jar
+$ exists target/scala-2.10/exportjars_2.10-0.1-SNAPSHOT-tests.jar
+$ delete target/scala-2.10/exportjars_2.10-0.1-SNAPSHOT.jar
+$ delete target/scala-2.10/exportjars_2.10-0.1-SNAPSHOT-tests.jar
+$ absent target/scala-2.10/exportjars_2.10-0.1-SNAPSHOT.jar
+$ absent target/scala-2.10/exportjars_2.10-0.1-SNAPSHOT-tests.jar
