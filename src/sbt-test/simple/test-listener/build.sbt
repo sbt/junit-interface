@@ -1,7 +1,5 @@
 name := "test-project"
 
-scalaVersion := "2.10.2"
-
 libraryDependencies += "com.novocode" % "junit-interface" % sys.props("project.version") % "test"
 
 testOptions += Tests.Argument(TestFrameworks.JUnit, "-v", "-n", "--run-listener=test.JUnitListener")
@@ -27,3 +25,5 @@ checkRunListenerFile := {
   val contents = sbt.IO.readLines(listenerFile.value)
   assert(expectedContents == contents, "Expecting contents=" + expectedContents + " actual=" + contents)
 }
+
+ivyLoggingLevel := UpdateLogging.Quiet
