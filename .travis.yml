@@ -1,10 +1,18 @@
+sudo: false
 language: scala
-script:
-  - sbt test scripted
-scala:
-  - 2.10.3
-jdk:
-  - openjdk6
+script: sbt test scripted
+scala: 2.10.3
+jdk: openjdk6
+
+cache:
+  directories:
+    - $HOME/.ivy2/cache
+    - $HOME/.sbt
+
+before_cache:
+  - find "$HOME/.sbt" -name "*.lock" -print -delete
+  - find "$HOME/.ivy2" -name "ivydata-*.properties" -print -delete
+
 notifications:
   email:
     - qbranch@typesafe.com
