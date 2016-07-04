@@ -1,11 +1,5 @@
 package com.novocode.junit;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.io.IOException;
-
 import org.junit.runner.Description;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
@@ -14,6 +8,11 @@ import sbt.testing.EventHandler;
 import sbt.testing.Fingerprint;
 import sbt.testing.Status;
 
+import java.io.IOException;
+import java.util.Collections;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+
 import static com.novocode.junit.Ansi.*;
 
 
@@ -21,7 +20,7 @@ final class EventDispatcher extends RunListener
 {
   private final RichLogger logger;
   private final Set<String> reported = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
-  private final Map<String, Long> startTimes = new ConcurrentHashMap<String, Long>();
+  private final ConcurrentHashMap<String, Long> startTimes = new ConcurrentHashMap<String, Long>();
   private final EventHandler handler;
   private final RunSettings settings;
   private OutputCapture capture;
