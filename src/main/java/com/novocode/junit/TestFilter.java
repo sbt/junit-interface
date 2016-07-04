@@ -1,17 +1,18 @@
 // Mostly copied from http://stackoverflow.com/questions/1230706/running-a-subset-of-junit-test-methods/1236782#1236782
 package com.novocode.junit;
 
-import java.util.HashSet;
-import java.util.regex.Pattern;
-
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 public final class TestFilter extends Filter
 {
   private static final String DELIMITER = "\\,";
 
-  private final HashSet<String> ignored = new HashSet<String>();
+  private final Set<String> ignored = new HashSet<String>();
   private final String[] testPatterns;
   private final EventDispatcher ed;
 
