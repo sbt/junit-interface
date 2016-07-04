@@ -1,14 +1,15 @@
 package com.novocode.junit;
 
-import java.util.ArrayList;
-import java.util.regex.Pattern;
-
 import org.junit.runner.Description;
 import org.junit.runner.manipulation.Filter;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Pattern;
+
 public final class GlobFilter extends Filter
 {
-  private final ArrayList<Pattern> patterns = new ArrayList<Pattern>();
+  private final List<Pattern> patterns = new ArrayList<Pattern>();
   private final RunSettings settings;
 
   public GlobFilter(RunSettings settings, Iterable<String> globPatterns)

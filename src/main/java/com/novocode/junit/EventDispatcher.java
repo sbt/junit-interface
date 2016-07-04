@@ -1,6 +1,7 @@
 package com.novocode.junit;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.io.IOException;
@@ -20,7 +21,7 @@ final class EventDispatcher extends RunListener
 {
   private final RichLogger logger;
   private final Set<String> reported = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
-  private final ConcurrentHashMap<String, Long> startTimes = new ConcurrentHashMap<String, Long>();
+  private final Map<String, Long> startTimes = new ConcurrentHashMap<String, Long>();
   private final EventHandler handler;
   private final RunSettings settings;
   private OutputCapture capture;
@@ -117,7 +118,7 @@ final class EventDispatcher extends RunListener
   private Long elapsedTime(Description description) {
     Long startTime = startTimes.get(settings.buildPlainName(description));
     if( startTime == null ) {
-      return 0l;
+      return 0L;
     } else {
       return System.currentTimeMillis() - startTime;
     }
@@ -141,7 +142,7 @@ final class EventDispatcher extends RunListener
 
   void testExecutionFailed(String testName, Throwable err)
   {
-    post(new Event(Ansi.c(testName, Ansi.ERRMSG), settings.buildErrorMessage(err), Status.Error, 0l, err) {
+    post(new Event(Ansi.c(testName, Ansi.ERRMSG), settings.buildErrorMessage(err), Status.Error, 0L, err) {
       void logTo(RichLogger logger) {
         logger.error("Execution of test "+ansiName+" failed: "+ansiMsg, error);
       }

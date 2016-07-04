@@ -1,22 +1,17 @@
 package com.novocode.junit;
 
-import static com.novocode.junit.Ansi.ENAME1;
-import static com.novocode.junit.Ansi.ENAME2;
-import static com.novocode.junit.Ansi.ENAME3;
-import static com.novocode.junit.Ansi.NNAME1;
-import static com.novocode.junit.Ansi.NNAME2;
-import static com.novocode.junit.Ansi.NNAME3;
-import static com.novocode.junit.Ansi.c;
+import org.junit.runner.Description;
 
 import java.lang.reflect.Method;
 import java.util.HashSet;
+import java.util.Set;
 
-import org.junit.runner.Description;
+import static com.novocode.junit.Ansi.*;
 
 class RunSettings {
   final boolean color, quiet, verbose, logAssert, logExceptionClass;
   private final boolean decodeScalaNames;
-  private final HashSet<String> ignoreRunners = new HashSet<String>(); 
+  private final Set<String> ignoreRunners = new HashSet<String>();
 
   RunSettings(boolean color, boolean decodeScalaNames, boolean quiet,
       boolean verbose, boolean logAssert, String ignoreRunners,
