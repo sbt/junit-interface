@@ -60,7 +60,7 @@ final class JUnitRunner implements Runner {
         String testClassName = taskDef.fullyQualifiedName();
 
         boolean quiet = false, verbose = false, nocolor = false, decodeScalaNames = false,
-                logAssert = false, logExceptionClass = true;
+                logAssert = true, logExceptionClass = true;
         HashMap<String, String> sysprops = new HashMap<String, String>();
         ArrayList<String> globPatterns = new ArrayList<String>();
         Set<String> includeCategories = new HashSet<String>();

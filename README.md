@@ -6,13 +6,9 @@ Unlike Scala testing frameworks like ScalaTest (which can also run JUnit test ca
 
 See LICENSE.txt for licensing conditions (BSD-style).
 
-To use with sbt 0.10+, add the following dependency to your build.sbt:
+Add the following dependency to your build.sbt:
 
     libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % "test"
-
-To use with sbt 0.7, add the following dependency to your project:
-
-    val junitInterface = "com.novocode" % "junit-interface" % "0.11" % "test"
 
 JUnit itself is automatically pulled in as a transitive dependency. sbt already knows about junit-interface so the dependency alone is enough. You do not have to add it to the list of test frameworks.
 
@@ -24,7 +20,7 @@ The following options are supported for JUnit tests:
  `-q`                                         | Suppress stdout for successful tests. Stderr is printed to the console normally. Stdout is written to a buffer and discarded when a test succeeds. If it fails, the buffer is dumped to the console. Since stdio redirection in Java is a bad kludge (`System.setOut()` changes the static final field System.out through native code) this may not work for all scenarios. Scala has its own console with a sane redirection feature. If Scala is detected on the class path, junit-interface tries to reroute scala.Console's stdout, too.
  `-n`                                         | Do not use ANSI colors in the output even if sbt reports that they are supported.
  `-s`                                         | Try to decode Scala names in stack traces and test names. Fall back silently to non-decoded names if no matching Scala library is on the class path.
- `-a`                                         | Show stack traces and exception class name for AssertionErrors (thrown by all assert* methods in JUnit). Without this option, failed assertions do not print a stack trace or the "java.lang.AssertionError: " prefix.
+ `-a`                                         | Show stack traces and exception class name for AssertionErrors (thrown by all assert* methods in JUnit).`
  `-c`                                         | Do not print the exception class name prefix for any messages. With this option, only the result of getMessage() plus a stack trace is shown.
  `+v`                                         | Turn off `-v`. Takes precedence over `-v`.
  `+q`                                         | Turn off `-q`. Takes precedence over `-q`.
@@ -41,15 +37,9 @@ The following options are supported for JUnit tests:
 
 Any parameter not starting with `-` or `+` is treated as a glob pattern for matching tests. Unlike the patterns given directly to sbt's `test-only` command, the patterns given to junit-interface will match against the full test names (as displayed by junit-interface) of all atomic test cases, so you can match on test methods and parts of suites with custom runners.
 
-In sbt 0.10+, you can set default options in your build.sbt file:
+You can set default options in your build.sbt file:
 
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-q", "-v")
-
-In sbt 0.7, add the following to your project:
-
-    override def testOptions =
-      super.testOptions ++
-      Seq(TestArgument(TestFrameworks.JUnit, "-q", "-v"))
 
 Or use them with the test-quick and test-only commands:
 
