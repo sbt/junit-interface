@@ -178,7 +178,9 @@ final class JUnitRunner implements Runner {
       return true;
     } else {
       RunWith rw = clazz.getAnnotation(RunWith.class);
-      if(rw != null) return !settings.ignoreRunner(rw.value().getName());
+      if(rw != null) {
+        return !settings.ignoreRunner(rw.value().getName());
+      }
       else return true;
     }
   }
