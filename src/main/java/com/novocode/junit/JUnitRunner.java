@@ -20,8 +20,9 @@ import sbt.testing.TaskDef;
 
 final class JUnitRunner implements Runner {
 
-  private final ClassLoader testClassLoader;
+  private static final Fingerprint JUNIT_FP = new JUnitFingerprint();
   private static final Object NULL = new Object();
+  private final ClassLoader testClassLoader;
   private final String[] args;
   private final String[] remoteArgs;
 
@@ -33,13 +34,13 @@ final class JUnitRunner implements Runner {
 
   @Override
   public Task[] tasks(TaskDef[] taskDefs) {
-   int length = taskDefs.length;
-		Task[] tasks = new Task[length];
-		for (int i = 0; i < length; i++) {
-			TaskDef taskDef = taskDefs[i];
-			tasks[i] = createTask(taskDef);
-		}
-		return tasks;
+    int length = taskDefs.length;
+    Task[] tasks = new Task[length];
+    for (int i = 0; i < length; i++) {
+      TaskDef taskDef = taskDefs[i];
+      tasks[i] = createTask(taskDef);
+    }
+    return tasks;
   }
 
   private Task createTask(final TaskDef taskDef) {
@@ -76,8 +77,9 @@ final class JUnitRunner implements Runner {
           else if("-a".equals(s)) logAssert = true;
           else if("-c".equals(s)) logExceptionClass = false;
           else if(s.startsWith("-tests=")) {
-            for(Logger l : loggers)
+            for(Logger l : loggers) {
               l.warn("junit-interface option \"-tests\" is deprecated. Use \"--tests\" instead.");
+            }
             testFilter = s.substring(7);
           }
           else if(s.startsWith("--tests=")) testFilter = s.substring(8);
@@ -116,15 +118,20 @@ final class JUnitRunner implements Runner {
               String old = System.getProperty(me.getKey());
               oldprops.put(me.getKey(), old == null ? NULL : old);
             }
-            for(Map.Entry<String, String> me : sysprops.entrySet())
+            for(Map.Entry<String, String> me : sysprops.entrySet()) {
               System.setProperty(me.getKey(), me.getValue());
+            }
           }
           try {
             Class<?> cl = testClassLoader.loadClass(testClassName);
             if(shouldRun(fingerprint, cl, settings)) {
               Request request = Request.classes(cl);
-              if(globPatterns.size() > 0) request = new SilentFilterRequest(request, new GlobFilter(settings, globPatterns));
-              if(testFilter.length() > 0) request = new SilentFilterRequest(request, new TestFilter(testFilter, ed));
+              if(globPatterns.size() > 0) {
+                request = new SilentFilterRequest(request, new GlobFilter(settings, globPatterns));
+              }
+              if(testFilter.length() > 0) {
+                request = new SilentFilterRequest(request, new TestFilter(testFilter, ed));
+              }
               if(!includeCategories.isEmpty() || !excludeCategories.isEmpty()) {
                 request = new SilentFilterRequest(request,
                         CategoryFilter.categoryFilter(true, loadClasses(testClassLoader, includeCategories), true,
@@ -132,14 +139,17 @@ final class JUnitRunner implements Runner {
               }
               ju.run(request);
             }
+          } catch(Exception ex) {
+            ed.testExecutionFailed(testClassName, ex);
           }
-          catch(Exception ex) { ed.testExecutionFailed(testClassName, ex); }
-        }
-        finally {
+        } finally {
           synchronized(System.getProperties()) {
             for(Map.Entry<String, Object> me : oldprops.entrySet()) {
-              if(me.getValue() == NULL) System.clearProperty(me.getKey());
-              else System.setProperty(me.getKey(), (String)me.getValue());
+              if(me.getValue() == NULL) {
+                System.clearProperty(me.getKey());
+              } else {
+                System.setProperty(me.getKey(), (String)me.getValue());
+              }
             }
           }
         }
@@ -156,12 +166,12 @@ final class JUnitRunner implements Runner {
     }
   }
 
-  private static final Fingerprint JUNIT_FP = new JUnitFingerprint();
-
   private boolean shouldRun(Fingerprint fingerprint, Class<?> clazz, RunSettings settings) {
     if(JUNIT_FP.equals(fingerprint)) {
       // Ignore classes which are matched by the other fingerprints
-      if(TestCase.class.isAssignableFrom(clazz)) return false;
+      if(TestCase.class.isAssignableFrom(clazz)) {
+        return false;
+      }
       for(Annotation a : clazz.getDeclaredAnnotations()) {
         if(a.annotationType().equals(RunWith.class)) return false;
       }
