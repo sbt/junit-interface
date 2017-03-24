@@ -1,16 +1,15 @@
 name := "JUnit-Interface"
 
 organization := "com.novocode"
-
-version := "0.11"
-
-crossPaths := false
-
-libraryDependencies += "junit" % "junit" % "4.12"
-
-libraryDependencies += "org.scala-sbt" % "test-interface" % "1.0"
+version := "0.12-SNAPSHOT"
 
 autoScalaLibrary := false
+crossPaths := false
+
+libraryDependencies ++= Seq(
+  "junit" % "junit" % "4.12",
+  "org.scala-sbt" % "test-interface" % "1.0"
+)
 
 javacOptions in compile ++= List("-target", "1.5", "-source", "1.5")
 
@@ -20,21 +19,13 @@ publishTo <<= (version){ v => Some(
 )}
 
 publishMavenStyle := true
-
 publishArtifact in Test := false
-
 pomIncludeRepository := { _ => false }
-
 credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
-
 description := "An implementation of sbt's test interface for JUnit 4"
-
 homepage := Some(url("http://github.com/sbt/junit-interface/"))
-
 startYear := Some(2009)
-
 licenses += ("Two-clause BSD-style license", url("http://github.com/sbt/junit-interface/blob/master/LICENSE.txt"))
-
 pomExtra :=
   <developers>
     <developer>
@@ -54,8 +45,9 @@ pomExtra :=
 
 scriptedSettings
 
-scriptedLaunchOpts <+= version apply { v => "-Dproject.version="+v }
-
-scriptedLaunchOpts += "-XX:MaxPermSize=256M"
+scriptedLaunchOpts ++= Seq(
+  s"-Dproject.version=${version.value}",
+  "-Xmx256m"
+)
 
 resolvers += Resolver.typesafeIvyRepo("releases")
