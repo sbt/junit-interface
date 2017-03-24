@@ -60,7 +60,7 @@ final class JUnitRunner implements Runner {
         Fingerprint fingerprint = taskDef.fingerprint();
         String testClassName = taskDef.fullyQualifiedName();
 
-        boolean quiet = false, verbose = false, nocolor = false, decodeScalaNames = false,
+        boolean quiet = false, verbose = true, nocolor = false, decodeScalaNames = false,
                 logAssert = true, logExceptionClass = true;
         HashMap<String, String> sysprops = new HashMap<String, String>();
         ArrayList<String> globPatterns = new ArrayList<String>();
