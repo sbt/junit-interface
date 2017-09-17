@@ -13,10 +13,10 @@ libraryDependencies ++= Seq(
 
 javacOptions in compile ++= List("-target", "1.5", "-source", "1.5")
 
-publishTo <<= (version){ v => Some(
-  if(v.trim.endsWith("SNAPSHOT")) "snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+publishTo := Some(
+  if(version.value.trim.endsWith("SNAPSHOT")) "snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
   else "releases"  at "https://oss.sonatype.org/service/local/staging/deploy/maven2"
-)}
+)
 
 publishMavenStyle := true
 publishArtifact in Test := false
