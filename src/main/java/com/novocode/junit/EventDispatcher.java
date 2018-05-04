@@ -61,7 +61,7 @@ final class EventDispatcher extends RunListener
   public void testAssumptionFailure(final Failure failure)
   {
     uncapture(true);
-    postIfFirst(new ErrorEvent(failure, Status.Skipped) {
+    post(new ErrorEvent(failure, Status.Skipped) {
       void logTo(RichLogger logger) {
         logger.warn("Test assumption in test "+ansiName+" failed: "+ansiMsg + durationSuffix());
       }
@@ -72,7 +72,7 @@ final class EventDispatcher extends RunListener
   public void testFailure(final Failure failure)
   {
     uncapture(true);
-    postIfFirst(new ErrorEvent(failure, Status.Failure) {
+    post(new ErrorEvent(failure, Status.Failure) {
       void logTo(RichLogger logger) {
         logger.error("Test "+ansiName+" failed: "+ansiMsg + durationSuffix(), error);
       }
@@ -83,7 +83,7 @@ final class EventDispatcher extends RunListener
   public void testFinished(Description desc)
   {
     uncapture(false);
-    postIfFirst(new InfoEvent(desc, Status.Success) {
+    post(new InfoEvent(desc, Status.Success) {
       void logTo(RichLogger logger) {
         logger.debug("Test "+ansiName+" finished" + durationSuffix());
       }
@@ -94,7 +94,7 @@ final class EventDispatcher extends RunListener
   @Override
   public void testIgnored(Description desc)
   {
-    postIfFirst(new InfoEvent(desc, Status.Skipped) {
+    post(new InfoEvent(desc, Status.Skipped) {
       void logTo(RichLogger logger) {
         logger.info("Test "+ansiName+" ignored");
       }
@@ -146,12 +146,6 @@ final class EventDispatcher extends RunListener
         logger.error("Execution of test "+ansiName+" failed: "+ansiMsg, error);
       }
     });
-  }
-
-  private void postIfFirst(AbstractEvent e)
-  {
-    e.logTo(logger);
-    if(reported.add(e.fullyQualifiedName())) handler.handle(e);
   }
 
   void post(AbstractEvent e)
