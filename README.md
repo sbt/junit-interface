@@ -16,13 +16,13 @@ The following options are supported for JUnit tests:
 
  Option                                       | Description
 :---------------------------------------------|:----------------------
- `-v`                                         | Log "test run started" / "test started" / "test run finished" events on log level "info" instead of "debug".
+ `-v`                                         | Same as `--verbosity=2`
  `-q`                                         | Suppress stdout for successful tests. Stderr is printed to the console normally. Stdout is written to a buffer and discarded when a test succeeds. If it fails, the buffer is dumped to the console. Since stdio redirection in Java is a bad kludge (`System.setOut()` changes the static final field System.out through native code) this may not work for all scenarios. Scala has its own console with a sane redirection feature. If Scala is detected on the class path, junit-interface tries to reroute scala.Console's stdout, too.
  `-n`                                         | Do not use ANSI colors in the output even if sbt reports that they are supported.
  `-s`                                         | Try to decode Scala names in stack traces and test names. Fall back silently to non-decoded names if no matching Scala library is on the class path.
  `-a`                                         | Show stack traces and exception class name for AssertionErrors (thrown by all assert* methods in JUnit).`
  `-c`                                         | Do not print the exception class name prefix for any messages. With this option, only the result of getMessage() plus a stack trace is shown.
- `+v`                                         | Turn off `-v`. Takes precedence over `-v`.
+ `+v`                                         | Same as `--verbosity=0`
  `+q`                                         | Turn off `-q`. Takes precedence over `-q`.
  `+n`                                         | Turn off `-n`. Takes precedence over `-n`.
  `+s`                                         | Turn off `-s`. Takes precedence over `-s`.
@@ -34,6 +34,8 @@ The following options are supported for JUnit tests:
  `--run-listener=<CLASS_NAME>`                | A (user defined) class which extends `org.junit.runner.notification.RunListener`. An instance of this class is created and added to the JUnit Runner, so that it will receive the run events. For more information, see [RunListener](http://junit.org/javadoc/latest/org/junit/runner/notification/RunListener.html). *Note: this uses the test-classloader, so the class needs to be defined in `src/test` or `src/main` or included as a test or compile dependency*
  `--include-categories=<CLASSES>`             | A comma separated list of category class names that should be included. Only tests with one or more of these categories will be run.
  `--exclude-categories=<CLASSES>`             | A comma separated list of category class names that should be excluded. No tests that match one or more of these categories will be run.
+ `--verbosity=<INT>`                          | Higher verbosity logs more events at level "info" instead of "debug". 0: Default; 1: "Test run finished" at info; 2: Also "test run started" and "test started" at info; 3: Also "test finished" at info.
+ `--summary=<INT>`                            | The type of summary to show for a test task execution. 0: Leave to sbt (default); 1: One line; 2: Include list of failed tests
 
 Any parameter not starting with `-` or `+` is treated as a glob pattern for matching tests. Unlike the patterns given directly to sbt's `test-only` command, the patterns given to junit-interface will match against the full test names (as displayed by junit-interface) of all atomic test cases, so you can match on test methods and parts of suites with custom runners.
 

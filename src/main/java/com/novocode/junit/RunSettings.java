@@ -16,7 +16,9 @@ import org.junit.runner.Description;
 class RunSettings {
   private static final Object NULL = new Object();
 
-  final boolean color, quiet, verbose, logAssert, logExceptionClass;
+  final boolean color, quiet, logAssert, logExceptionClass;
+  final Verbosity verbosity;
+  final Summary summary;
   final ArrayList<String> globPatterns;
   final Set<String> includeCategories, excludeCategories;
   final String testFilter;
@@ -26,7 +28,7 @@ class RunSettings {
   private final HashSet<String> ignoreRunners = new HashSet<String>();
 
   RunSettings(boolean color, boolean decodeScalaNames, boolean quiet,
-              boolean verbose, boolean logAssert, String ignoreRunners,
+              Verbosity verbosity, Summary summary, boolean logAssert, String ignoreRunners,
               boolean logExceptionClass,
               HashMap<String, String> sysprops,
               ArrayList<String> globPatterns,
@@ -35,7 +37,8 @@ class RunSettings {
     this.color = color;
     this.decodeScalaNames = decodeScalaNames;
     this.quiet = quiet;
-    this.verbose = verbose;
+    this.verbosity = verbosity;
+    this.summary = summary;
     this.logAssert = logAssert;
     this.logExceptionClass = logExceptionClass;
     for(String s : ignoreRunners.split(","))
@@ -159,5 +162,13 @@ class RunSettings {
         }
       }
     }
+  }
+
+  static enum Verbosity {
+    TERSE, RUN_FINISHED, STARTED, TEST_FINISHED
+  }
+
+  static enum Summary {
+    SBT, ONE_LINE, LIST_FAILED
   }
 }

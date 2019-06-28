@@ -13,16 +13,21 @@ final class JUnitRunner implements Runner {
   private final String[] remoteArgs;
   private final RunSettings settings;
 
+  private volatile boolean used = false;
+
   final ClassLoader testClassLoader;
   final RunListener runListener;
+  final RunStatistics runStatistics;
 
   JUnitRunner(String[] args, String[] remoteArgs, ClassLoader testClassLoader) {
     this.args = args;
     this.remoteArgs = remoteArgs;
     this.testClassLoader = testClassLoader;
 
-    boolean quiet = false, verbose = true, nocolor = false, decodeScalaNames = false,
+    boolean quiet = false, nocolor = false, decodeScalaNames = false,
         logAssert = true, logExceptionClass = true;
+    RunSettings.Verbosity verbosity = RunSettings.Verbosity.TERSE;
+    RunSettings.Summary summary = RunSettings.Summary.SBT;
     HashMap<String, String> sysprops = new HashMap<String, String>();
     ArrayList<String> globPatterns = new ArrayList<String>();
     Set<String> includeCategories = new HashSet<String>();
@@ -33,7 +38,10 @@ final class JUnitRunner implements Runner {
     String runListener = null;
     for(String s : args) {
       if("-q".equals(s)) quiet = true;
-      else if("-v".equals(s)) verbose = true;
+      else if("-v".equals(s)) verbosity = RunSettings.Verbosity.STARTED;
+      else if("+v".equals(s)) verbosity = RunSettings.Verbosity.TERSE;
+      else if(s.startsWith("--verbosity=")) verbosity = RunSettings.Verbosity.values()[Integer.parseInt(s.substring(12))];
+      else if(s.startsWith("--summary=")) summary = RunSettings.Summary.values()[Integer.parseInt(s.substring(10))];
       else if("-n".equals(s)) nocolor = true;
       else if("-s".equals(s)) decodeScalaNames = true;
       else if("-a".equals(s)) logAssert = true;
@@ -51,21 +59,22 @@ final class JUnitRunner implements Runner {
     }
     for(String s : args) {
       if("+q".equals(s)) quiet = false;
-      else if("+v".equals(s)) verbose = false;
       else if("+n".equals(s)) nocolor = false;
       else if("+s".equals(s)) decodeScalaNames = false;
       else if("+a".equals(s)) logAssert = false;
       else if("+c".equals(s)) logExceptionClass = true;
     }
     this.settings =
-      new RunSettings(!nocolor, decodeScalaNames, quiet, verbose, logAssert, ignoreRunners, logExceptionClass,
+      new RunSettings(!nocolor, decodeScalaNames, quiet, verbosity, summary, logAssert, ignoreRunners, logExceptionClass,
         sysprops, globPatterns, includeCategories, excludeCategories,
         testFilter);
     this.runListener = createRunListener(runListener);
+    this.runStatistics = new RunStatistics(settings);
   }
 
   @Override
   public Task[] tasks(TaskDef[] taskDefs) {
+    used = true;
     int length = taskDefs.length;
     Task[] tasks = new Task[length];
     for (int i = 0; i < length; i++) {
@@ -87,7 +96,12 @@ final class JUnitRunner implements Runner {
 
   @Override
   public String done() {
-    return "";
+    // Can't simply return the summary due to https://github.com/sbt/sbt/issues/3510
+    if(!used) return "";
+    String stats = runStatistics.createSummary();
+    if(stats.isEmpty()) return stats;
+    System.out.println(stats);
+    return " ";
   }
 
   @Override
