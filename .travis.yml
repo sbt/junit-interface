@@ -1,8 +1,8 @@
 sudo: false
 language: scala
 script: sbt test scripted
-scala: 2.10.3
-jdk: openjdk6
+scala: 2.12.7
+jdk: openjdk8
 
 cache:
   directories:
