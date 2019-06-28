@@ -1,51 +1,51 @@
 # check everything runs
 > test
-> tests-executed one-fast one-slow one-none two-a two-b
+> testsExecuted one-fast one-slow one-none two-a two-b
 
-> reset-tests
+> resetTests
 
 # Turn on fast category
 > set testOptions := Seq(Tests.Argument(TestFrameworks.JUnit, Constants.IncludeFast))
 > test
-> tests-executed one-fast two-a two-b
-> tests-not-executed one-slow one-none
+> testsExecuted one-fast two-a two-b
+> testsNotExecuted one-slow one-none
 
-> reset-tests
+> resetTests
 
 # Turn on slow category
 > set testOptions := Seq(Tests.Argument(TestFrameworks.JUnit, Constants.IncludeSlow))
 > test
-> tests-executed one-slow
-> tests-not-executed one-fast one-none two-a two-b
+> testsExecuted one-slow
+> testsNotExecuted one-fast one-none two-a two-b
 
-> reset-tests
+> resetTests
 
 # Turn on fast and slow category
 > set testOptions := Seq(Tests.Argument(TestFrameworks.JUnit, Constants.IncludeFastAndSlow))
 > test
-> tests-executed one-fast one-slow two-a two-b
-> tests-not-executed one-none
+> testsExecuted one-fast one-slow two-a two-b
+> testsNotExecuted one-none
 
-> reset-tests
+> resetTests
 
 # Exclude fast category
 > set testOptions := Seq(Tests.Argument(TestFrameworks.JUnit, Constants.ExcludeFast))
 > test
-> tests-executed one-slow one-none
-> tests-not-executed one-fast two-a two-b
+> testsExecuted one-slow one-none
+> testsNotExecuted one-fast two-a two-b
 
-> reset-tests
+> resetTests
 
 # Exclude slow category
 > set testOptions := Seq(Tests.Argument(TestFrameworks.JUnit, Constants.ExcludeSlow))
 > test
-> tests-executed one-fast one-none two-a two-b
-> tests-not-executed one-slow
+> testsExecuted one-fast one-none two-a two-b
+> testsNotExecuted one-slow
 
-> reset-tests
+> resetTests
 
 # Exclude slow and fast category
 > set testOptions := Seq(Tests.Argument(TestFrameworks.JUnit, Constants.ExcludeFastAndSlow))
 > test
-> tests-executed one-none
-> tests-not-executed one-fast one-slow two-a two-b
+> testsExecuted one-none
+> testsNotExecuted one-fast one-slow two-a two-b

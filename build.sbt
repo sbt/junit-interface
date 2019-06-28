@@ -5,6 +5,7 @@ version := "0.12-SNAPSHOT"
 
 autoScalaLibrary := false
 crossPaths := false
+sbtPlugin := false
 
 libraryDependencies ++= Seq(
   "junit" % "junit" % "4.12",
@@ -42,9 +43,8 @@ pomExtra :=
 
 // curl -X POST http://ls.implicit.ly/api/1/libraries -d 'user=szeiger&repo=junit-interface&version=0.8'
 
-
-scriptedSettings
-
+enablePlugins(SbtPlugin)
+scriptedBufferLog := false
 scriptedLaunchOpts ++= Seq(
   s"-Dproject.version=${version.value}",
   "-Xmx256m"
