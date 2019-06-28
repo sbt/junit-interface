@@ -38,7 +38,7 @@ final class JUnitTask implements Task {
     String testClassName = taskDef.fullyQualifiedName();
     Description taskDescription = Description.createSuiteDescription(testClassName);
     RichLogger logger = new RichLogger(loggers, settings, testClassName);
-    EventDispatcher ed = new EventDispatcher(logger, eventHandler, settings, fingerprint, taskDescription);
+    EventDispatcher ed = new EventDispatcher(logger, eventHandler, settings, fingerprint, taskDescription, runner.runStatistics);
     JUnitCore ju = new JUnitCore();
     ju.addListener(ed);
     if (runner.runListener != null) ju.addListener(runner.runListener);

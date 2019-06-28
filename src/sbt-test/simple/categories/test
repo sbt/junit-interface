@@ -22,7 +22,7 @@
 
 # Turn on fast and slow category
 > set testOptions := Seq(Tests.Argument(TestFrameworks.JUnit, Constants.IncludeFastAndSlow))
-> test
+> testOnly -- --summary=2
 > testsExecuted one-fast one-slow two-a two-b
 > testsNotExecuted one-none
 

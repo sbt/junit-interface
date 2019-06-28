@@ -1,5 +1,6 @@
 package com.novocode.junit;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,17 +24,20 @@ final class EventDispatcher extends RunListener
   private final ConcurrentHashMap<String, Long> startTimes = new ConcurrentHashMap<String, Long>();
   private final EventHandler handler;
   private final RunSettings settings;
-  private OutputCapture capture;
   private final Fingerprint fingerprint;
-  private final Description taskDescription;
+  private final String taskInfo;
+  private final RunStatistics runStatistics;
+  private OutputCapture capture;
 
-  EventDispatcher(RichLogger logger, EventHandler handler, RunSettings settings, Fingerprint fingerprint, Description taskDescription)
+  EventDispatcher(RichLogger logger, EventHandler handler, RunSettings settings, Fingerprint fingerprint,
+                  Description taskDescription, RunStatistics runStatistics)
   {
     this.logger = logger;
     this.handler = handler;
     this.settings = settings;
     this.fingerprint = fingerprint;
-    this.taskDescription = taskDescription;
+    this.taskInfo = settings.buildInfoName(taskDescription);
+    this.runStatistics = runStatistics;
   }
 
   private abstract class Event extends AbstractEvent {
@@ -87,7 +91,7 @@ final class EventDispatcher extends RunListener
     uncapture(false);
     postIfFirst(new InfoEvent(desc, Status.Success) {
       void logTo(RichLogger logger) {
-        logger.debug("Test "+ansiName+" finished" + durationSuffix());
+        debugOrInfo("Test "+ansiName+" finished" + durationSuffix(), RunSettings.Verbosity.TEST_FINISHED);
       }
     });
     logger.popCurrentTestClassName();
@@ -108,7 +112,7 @@ final class EventDispatcher extends RunListener
   {
     recordStartTime(description);
     logger.pushCurrentTestClassName(description.getClassName());
-    debugOrInfo("Test " + settings.buildInfoName(description) + " started");
+    debugOrInfo("Test " + settings.buildInfoName(description) + " started", RunSettings.Verbosity.STARTED);
     capture();
   }
 
@@ -128,17 +132,18 @@ final class EventDispatcher extends RunListener
   @Override
   public void testRunFinished(Result result)
   {
-    debugOrInfo(c("Test run finished: ", INFO)+
+    debugOrInfo(c("Test run ", INFO)+taskInfo+c(" finished: ", INFO)+
       c(result.getFailureCount()+" failed", result.getFailureCount() > 0 ? ERRCOUNT : INFO)+
       c(", ", INFO)+
       c(result.getIgnoreCount()+" ignored", result.getIgnoreCount() > 0 ? IGNCOUNT : INFO)+
-      c(", "+result.getRunCount()+" total, "+(result.getRunTime()/1000.0)+"s", INFO));
+      c(", "+result.getRunCount()+" total, "+(result.getRunTime()/1000.0)+"s", INFO), RunSettings.Verbosity.RUN_FINISHED);
+    runStatistics.addTime(result.getRunTime());
   }
 
   @Override
   public void testRunStarted(Description description)
   {
-    debugOrInfo(c("Test run started", INFO));
+    debugOrInfo(c("Test run ", INFO)+taskInfo+c(" started", INFO), RunSettings.Verbosity.STARTED);
   }
 
   void testExecutionFailed(String testName, Throwable err)
@@ -153,12 +158,16 @@ final class EventDispatcher extends RunListener
   private void postIfFirst(AbstractEvent e)
   {
     e.logTo(logger);
-    if(reported.add(e.fullyQualifiedName())) handler.handle(e);
+    if(reported.add(e.fullyQualifiedName())) {
+      runStatistics.captureStats(e);
+      handler.handle(e);
+    }
   }
 
   void post(AbstractEvent e)
   {
     e.logTo(logger);
+    runStatistics.captureStats(e);
     handler.handle(e);
   }
 
@@ -182,9 +191,9 @@ final class EventDispatcher extends RunListener
     }
   }
 
-  private void debugOrInfo(String msg)
+  private void debugOrInfo(String msg, RunSettings.Verbosity atVerbosity)
   {
-    if(settings.verbose) logger.info(msg);
+    if(atVerbosity.ordinal() <= settings.verbosity.ordinal()) logger.info(msg);
     else logger.debug(msg);
   }
 }
