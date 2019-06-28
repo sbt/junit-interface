@@ -25,13 +25,15 @@ final class EventDispatcher extends RunListener
   private final RunSettings settings;
   private OutputCapture capture;
   private final Fingerprint fingerprint;
+  private final Description taskDescription;
 
-  EventDispatcher(RichLogger logger, EventHandler handler, RunSettings settings, Fingerprint fingerprint)
+  EventDispatcher(RichLogger logger, EventHandler handler, RunSettings settings, Fingerprint fingerprint, Description taskDescription)
   {
     this.logger = logger;
     this.handler = handler;
     this.settings = settings;
     this.fingerprint = fingerprint;
+    this.taskDescription = taskDescription;
   }
 
   private abstract class Event extends AbstractEvent {
