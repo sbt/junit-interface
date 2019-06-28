@@ -12,7 +12,7 @@ libraryDependencies ++= Seq(
   "org.scala-sbt" % "test-interface" % "1.0"
 )
 
-javacOptions in compile ++= List("-target", "1.5", "-source", "1.5")
+javacOptions in compile ++= List("-target", "1.8", "-source", "1.8")
 
 publishTo := Some(
   if(version.value.trim.endsWith("SNAPSHOT")) "snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"

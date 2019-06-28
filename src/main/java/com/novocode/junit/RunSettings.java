@@ -9,18 +9,29 @@ import static com.novocode.junit.Ansi.NNAME3;
 import static com.novocode.junit.Ansi.c;
 
 import java.lang.reflect.Method;
-import java.util.HashSet;
+import java.util.*;
 
 import org.junit.runner.Description;
 
 class RunSettings {
+  private static final Object NULL = new Object();
+
   final boolean color, quiet, verbose, logAssert, logExceptionClass;
+  final ArrayList<String> globPatterns;
+  final Set<String> includeCategories, excludeCategories;
+  final String testFilter;
+
   private final boolean decodeScalaNames;
-  private final HashSet<String> ignoreRunners = new HashSet<String>(); 
+  private final HashMap<String, String> sysprops;
+  private final HashSet<String> ignoreRunners = new HashSet<String>();
 
   RunSettings(boolean color, boolean decodeScalaNames, boolean quiet,
-      boolean verbose, boolean logAssert, String ignoreRunners,
-      boolean logExceptionClass) {
+              boolean verbose, boolean logAssert, String ignoreRunners,
+              boolean logExceptionClass,
+              HashMap<String, String> sysprops,
+              ArrayList<String> globPatterns,
+              Set<String> includeCategories, Set<String> excludeCategories,
+              String testFilter) {
     this.color = color;
     this.decodeScalaNames = decodeScalaNames;
     this.quiet = quiet;
@@ -29,6 +40,11 @@ class RunSettings {
     this.logExceptionClass = logExceptionClass;
     for(String s : ignoreRunners.split(","))
       this.ignoreRunners.add(s.trim());
+    this.sysprops = sysprops;
+    this.globPatterns = globPatterns;
+    this.includeCategories = includeCategories;
+    this.excludeCategories = excludeCategories;
+    this.testFilter = testFilter;
   }
 
   String decodeName(String name) {
@@ -118,4 +134,30 @@ class RunSettings {
   }
 
   boolean ignoreRunner(String cln) { return ignoreRunners.contains(cln); }
+
+  Map<String, Object> overrideSystemProperties() {
+    HashMap<String, Object> oldprops = new HashMap<String, Object>();
+    synchronized(System.getProperties()) {
+      for(Map.Entry<String, String> me : sysprops.entrySet()) {
+        String old = System.getProperty(me.getKey());
+        oldprops.put(me.getKey(), old == null ? NULL : old);
+      }
+      for(Map.Entry<String, String> me : sysprops.entrySet()) {
+        System.setProperty(me.getKey(), me.getValue());
+      }
+    }
+    return oldprops;
+  }
+
+  void restoreSystemProperties(Map<String, Object> oldprops) {
+    synchronized(System.getProperties()) {
+      for(Map.Entry<String, Object> me : oldprops.entrySet()) {
+        if(me.getValue() == NULL) {
+          System.clearProperty(me.getKey());
+        } else {
+          System.setProperty(me.getKey(), (String)me.getValue());
+        }
+      }
+    }
+  }
 }
