@@ -37,12 +37,12 @@ The following options are supported for JUnit tests:
  `--verbosity=<INT>`                          | Higher verbosity logs more events at level "info" instead of "debug". 0: Default; 1: "Test run finished" at info; 2: Also "test run started" and "test started" at info; 3: Also "test finished" at info.
  `--summary=<INT>`                            | The type of summary to show for a test task execution. 0: Leave to sbt (default); 1: One line; 2: Include list of failed tests
 
-Any parameter not starting with `-` or `+` is treated as a glob pattern for matching tests. Unlike the patterns given directly to sbt's `test-only` command, the patterns given to junit-interface will match against the full test names (as displayed by junit-interface) of all atomic test cases, so you can match on test methods and parts of suites with custom runners.
+Any parameter not starting with `-` or `+` is treated as a glob pattern for matching tests. Unlike the patterns given directly to sbt's `testOnly` command, the patterns given to junit-interface will match against the full test names (as displayed by junit-interface) of all atomic test cases, so you can match on test methods and parts of suites with custom runners.
 
 You can set default options in your build.sbt file:
 
     testOptions += Tests.Argument(TestFrameworks.JUnit, "-q", "-v")
 
-Or use them with the test-quick and test-only commands:
+Or use them with the testQuick and testOnly commands:
 
-    test-only -- +q +v *Sequence*h2mem*
+    testOnly -- +q +v *Sequence*h2mem*
