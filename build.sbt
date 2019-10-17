@@ -42,7 +42,7 @@ developers := List(
 
 scmInfo := Some(
   ScmInfo(
-    url("git@github.com:sbt/junit-interface.git"),
+    url("https://github.com/sbt/junit-interface"),
     "scm:git@github.com:sbt/junit-interface.git"
   )
 )
