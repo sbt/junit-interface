@@ -1,4 +1,4 @@
-name := "JUnit-Interface"
+name := "junit-interface"
 
 organization := "com.novocode"
 version := "0.12-SNAPSHOT"
@@ -12,7 +12,10 @@ libraryDependencies ++= Seq(
   "org.scala-sbt" % "test-interface" % "1.0"
 )
 
-javacOptions in compile ++= List("-target", "1.8", "-source", "1.8")
+javacOptions in Compile ++= List("-target", "1.8", "-source", "1.8")
+
+// javadoc: error - invalid flag: -target.
+javacOptions in (Compile, doc) --= List("-target", "1.8")
 
 publishTo := Some(
   if(version.value.trim.endsWith("SNAPSHOT")) "snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
@@ -27,19 +30,22 @@ description := "An implementation of sbt's test interface for JUnit 4"
 homepage := Some(url("http://github.com/sbt/junit-interface/"))
 startYear := Some(2009)
 licenses += ("Two-clause BSD-style license", url("http://github.com/sbt/junit-interface/blob/master/LICENSE.txt"))
-pomExtra :=
-  <developers>
-    <developer>
-      <id>szeiger</id>
-      <name>Stefan Zeiger</name>
-      <timezone>+1</timezone>
-      <url>http://szeiger.de</url>
-    </developer>
-  </developers>
-  <scm>
-    <url>git@github.com:sbt/junit-interface.git/</url>
-    <connection>scm:git:git@github.com:sbt/junit-interface.git</connection>
-  </scm>
+
+developers := List(
+  Developer(
+    id    = "szeiger",
+    name  = "Stefan Zeiger",
+    email = "szeiger@novocode.com",
+    url   = url("http://szeiger.de")
+  )
+)
+
+scmInfo := Some(
+  ScmInfo(
+    url("git@github.com:sbt/junit-interface.git"),
+    "scm:git@github.com:sbt/junit-interface.git"
+  )
+)
 
 // curl -X POST http://ls.implicit.ly/api/1/libraries -d 'user=szeiger&repo=junit-interface&version=0.8'
 
