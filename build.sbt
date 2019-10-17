@@ -46,7 +46,7 @@ pomExtra :=
 enablePlugins(SbtPlugin)
 scriptedBufferLog := false
 scriptedLaunchOpts ++= Seq(
-  s"-Dproject.version=${version.value}",
+  s"-Dplugin.version=${version.value}",
   "-Xmx256m"
 )
 

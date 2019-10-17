@@ -1,8 +1,8 @@
 name := "test-project"
 
-scalaVersion := "2.10.2"
+scalaVersion := "2.10.7"
 
-libraryDependencies += "com.novocode" % "junit-interface" % sys.props("project.version") % "test"
+libraryDependencies += "com.novocode" % "junit-interface" % sys.props("plugin.version") % "test"
 
 
 val checkTestDefinitions = taskKey[Unit]("Tests that the test is discovered properly")
