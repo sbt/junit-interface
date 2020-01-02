@@ -1,6 +1,6 @@
 # JUnit Interface
 
-An implementation of [sbt's test interface](https://github.com/sbt/test-interface) for [JUnit 4](http://junit.org/). This allows you to run JUnit tests from [sbt](http://www.scala-sbt.org/).
+An implementation of [sbt's test interface](https://github.com/sbt/test-interface) for [JUnit 4](https://junit.org/junit4/). This allows you to run JUnit tests from [sbt](http://www.scala-sbt.org/).
 
 Unlike Scala testing frameworks like ScalaTest (which can also run JUnit test cases), both JUnit and this adapter are pure Java, so you can run JUnit tests with any Scala version supported by sbt without having to build a binary-compatible test framework first.
 
