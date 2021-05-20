@@ -100,7 +100,7 @@ final class EventDispatcher extends RunListener
   @Override
   public void testIgnored(Description desc)
   {
-    postIfFirst(new InfoEvent(desc, Status.Skipped) {
+    postIfFirst(new InfoEvent(desc, Status.Ignored) {
       void logTo(RichLogger logger) {
         logger.info("Test "+ansiName+" ignored");
       }
