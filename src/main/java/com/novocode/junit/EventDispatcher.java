@@ -1,6 +1,5 @@
 package com.novocode.junit;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -158,13 +157,30 @@ final class EventDispatcher extends RunListener
   private void postIfFirst(AbstractEvent e)
   {
     e.logTo(logger);
-    if(reported.add(e.fullyQualifiedName())) {
+
+    String fqn = e.fullyQualifiedName();
+    if (reported.add(fqn)) {
       runStatistics.captureStats(e);
       handler.handle(e);
     }
+
+    // NOTE: Status.Success is used to indicate that test is finished with any result (Success or Failure)
+    // When test has failed, two events are actually generated:
+    // 1) with Status.Failure
+    // 2) with Status.Success (actually meaning that test has finished)
+    // For non-failed tests, single event is emitted: Status.Success OR Status.Skipped OR Status.Ignored
+    boolean testProcessed = e.status == Status.Success || e.status == Status.Skipped || e.status == Status.Ignored;
+    if (testProcessed) {
+      // JUnit can run tests with the same name multiple times: https://github.com/sbt/junit-interface/issues/96
+      // Once test is finished, we mark it as unreported to allow running it again.
+      //
+      // There should be no issues with running tests in parallel (default behaviour of SBT)
+      // For each JUnitTask a dedicated EventDispatcher will be created with it's own `reported` map
+      reported.remove(fqn);
+    }
   }
 
-  void post(AbstractEvent e)
+  private void post(AbstractEvent e)
   {
     e.logTo(logger);
     runStatistics.captureStats(e);
