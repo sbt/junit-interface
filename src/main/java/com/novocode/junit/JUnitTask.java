@@ -41,7 +41,8 @@ final class JUnitTask implements Task {
     EventDispatcher ed = new EventDispatcher(logger, eventHandler, settings, fingerprint, taskDescription, runner.runStatistics);
     JUnitCore ju = new JUnitCore();
     ju.addListener(ed);
-    if (runner.runListener != null) ju.addListener(runner.runListener);
+
+    runner.runListeners.forEach(ju::addListener);
 
     Map<String, Object> oldprops = settings.overrideSystemProperties();
     try {
