@@ -9,7 +9,7 @@ import org.junit.runner.manipulation.Filter;
 
 public final class TestFilter extends Filter
 {
-  private static final String DELIMITER = "\\,";
+  private static final String DELIMITER = ",";
 
   private final HashSet<String> ignored = new HashSet<>();
   private final String[] testPatterns;
