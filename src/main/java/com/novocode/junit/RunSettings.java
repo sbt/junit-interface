@@ -25,7 +25,7 @@ class RunSettings {
 
   private final boolean decodeScalaNames;
   private final HashMap<String, String> sysprops;
-  private final HashSet<String> ignoreRunners = new HashSet<String>();
+  private final HashSet<String> ignoreRunners = new HashSet<>();
 
   RunSettings(boolean color, boolean decodeScalaNames, boolean quiet,
               Verbosity verbosity, Summary summary, boolean logAssert, String ignoreRunners,
@@ -139,7 +139,7 @@ class RunSettings {
   boolean ignoreRunner(String cln) { return ignoreRunners.contains(cln); }
 
   Map<String, Object> overrideSystemProperties() {
-    HashMap<String, Object> oldprops = new HashMap<String, Object>();
+    HashMap<String, Object> oldprops = new HashMap<>();
     synchronized(System.getProperties()) {
       for(Map.Entry<String, String> me : sysprops.entrySet()) {
         String old = System.getProperty(me.getKey());

@@ -19,8 +19,8 @@ import static com.novocode.junit.Ansi.*;
 final class EventDispatcher extends RunListener
 {
   private final RichLogger logger;
-  private final Set<String> reported = Collections.newSetFromMap(new ConcurrentHashMap<String, Boolean>());
-  private final ConcurrentHashMap<String, Long> startTimes = new ConcurrentHashMap<String, Long>();
+  private final Set<String> reported = Collections.newSetFromMap(new ConcurrentHashMap<>());
+  private final ConcurrentHashMap<String, Long> startTimes = new ConcurrentHashMap<>();
   private final EventHandler handler;
   private final RunSettings settings;
   private final Fingerprint fingerprint;

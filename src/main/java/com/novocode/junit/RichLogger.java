@@ -10,7 +10,7 @@ final class RichLogger
   private final Logger[] loggers;
   private final RunSettings settings;
   /* The top element is the test class of the currently executing test */
-  private final Stack<String> currentTestClassName = new Stack<String>();
+  private final Stack<String> currentTestClassName = new Stack<>();
 
   RichLogger(Logger[] loggers, RunSettings settings, String testClassName)
   {

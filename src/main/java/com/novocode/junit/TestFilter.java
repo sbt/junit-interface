@@ -11,7 +11,7 @@ public final class TestFilter extends Filter
 {
   private static final String DELIMITER = "\\,";
 
-  private final HashSet<String> ignored = new HashSet<String>();
+  private final HashSet<String> ignored = new HashSet<>();
   private final String[] testPatterns;
   private final EventDispatcher ed;
 
