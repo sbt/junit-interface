@@ -164,11 +164,11 @@ class RunSettings {
     }
   }
 
-  static enum Verbosity {
+  enum Verbosity {
     TERSE, RUN_FINISHED, STARTED, TEST_FINISHED
   }
 
-  static enum Summary {
+  enum Summary {
     SBT, ONE_LINE, LIST_FAILED
   }
 }
