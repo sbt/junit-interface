@@ -10,7 +10,6 @@ class RunStatistics {
 
   private int failedCount, ignoredCount, otherCount;
   private final ArrayList<String> failedNames = new ArrayList<>();
-  private final ArrayList<String> otherNames = new ArrayList<>();
   private volatile long accumulatedTime;
 
   RunStatistics(RunSettings settings) {
@@ -28,7 +27,6 @@ class RunStatistics {
     else {
       if(s == Status.Ignored) ignoredCount++;
       else otherCount++;
-      otherNames.add(e.fullyQualifiedName());
     }
   }
 
