@@ -35,7 +35,7 @@ class RunStatistics {
   private String summaryLine() {
     return (failedCount == 0 ? "All tests passed: " : "Some tests failed: ") +
       failedCount+" failed, "+ignoredCount+" ignored, "+(failedCount+ignoredCount+otherCount)+" total, "+
-      (accumulatedTime/1000.0)+"s";
+      accumulatedTime / 1000.0 +"s";
   }
 
   private static String mkString(List<String> l) {
@@ -52,7 +52,7 @@ class RunStatistics {
       case LIST_FAILED:
         return failedNames.isEmpty() ?
           summaryLine() :
-          (summaryLine() + "\n- Failed tests: " + mkString(failedNames));
+          summaryLine() + "\n- Failed tests: " + mkString(failedNames);
       case ONE_LINE:
         return summaryLine();
       default:

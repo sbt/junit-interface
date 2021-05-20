@@ -135,7 +135,7 @@ final class EventDispatcher extends RunListener
       c(result.getFailureCount()+" failed", result.getFailureCount() > 0 ? ERRCOUNT : INFO)+
       c(", ", INFO)+
       c(result.getIgnoreCount()+" ignored", result.getIgnoreCount() > 0 ? IGNCOUNT : INFO)+
-      c(", "+result.getRunCount()+" total, "+(result.getRunTime()/1000.0)+"s", INFO), RunSettings.Verbosity.RUN_FINISHED);
+      c(", "+result.getRunCount()+" total, "+ result.getRunTime() / 1000.0 +"s", INFO), RunSettings.Verbosity.RUN_FINISHED);
     runStatistics.addTime(result.getRunTime());
   }
 

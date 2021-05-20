@@ -81,7 +81,7 @@ class RunSettings {
 
   String buildColoredMessage(Throwable t, String c1) {
     if(t == null) return "null";
-    if(!logExceptionClass || (!logAssert && (t instanceof AssertionError)))  return t.getMessage();
+    if(!logExceptionClass || !logAssert && t instanceof AssertionError)  return t.getMessage();
     StringBuilder b = new StringBuilder();
 
     String cn = decodeName(t.getClass().getName());

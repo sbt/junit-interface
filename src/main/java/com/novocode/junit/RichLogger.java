@@ -132,7 +132,7 @@ final class RichLogger
   {
     boolean highlight = settings.color && (
         testClassName.equals(e.getClassName()) ||
-        (testFileName != null && testFileName.equals(e.getFileName()))
+                testFileName != null && testFileName.equals(e.getFileName())
       );
     StringBuilder b = new StringBuilder();
     b.append(settings.decodeName(e.getClassName() + '.' + e.getMethodName()));
