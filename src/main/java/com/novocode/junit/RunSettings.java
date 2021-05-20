@@ -89,7 +89,7 @@ class RunSettings {
     int pos2 = pos1 == -1 ? cn.lastIndexOf('.') : cn.lastIndexOf('.', pos1);
     if(pos2 == -1) b.append(c(cn, c1));
     else {
-      b.append(cn.substring(0, pos2));
+      b.append(cn, 0, pos2);
       b.append('.');
       b.append(c(cn.substring(pos2+1), c1));
     }
@@ -114,7 +114,7 @@ class RunSettings {
     int pos2 = pos1 == -1 ? cn.lastIndexOf('.') : cn.lastIndexOf('.', pos1);
     if(pos2 == -1) b.append(c(cn, c1));
     else {
-      b.append(cn.substring(0, pos2));
+      b.append(cn, 0, pos2);
       b.append('.');
       b.append(c(cn.substring(pos2+1), c1));
     }
