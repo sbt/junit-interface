@@ -9,10 +9,19 @@ See LICENSE.txt for licensing conditions (BSD-style).
 Add the following dependency to your `build.sbt`:
 
 ```scala
-libraryDependencies += "com.github.sbt" % "junit-interface" % "0.12" % Test
+libraryDependencies += "com.github.sbt" % "junit-interface" % "0.13.2" % Test
 ```
 
-JUnit itself is automatically pulled in as a transitive dependency. sbt already knows about junit-interface so the dependency alone is enough. You do not have to add it to the list of test frameworks.
+JUnit itself is automatically pulled in as a transitive dependency.
+
+ junit-interface version  | JUnit version
+:-------------------------|:--------------
+ 0.13.2                   | 4.13.2
+ 0.13.1                   | 4.13.1
+ 0.13                     | 4.13
+ 0.12                     | 4.12
+
+sbt already knows about junit-interface so the dependency alone is enough. You do not have to add it to the list of test frameworks.
 
 The following options are supported for JUnit tests:
 
