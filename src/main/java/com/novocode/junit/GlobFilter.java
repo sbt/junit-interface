@@ -8,7 +8,7 @@ import org.junit.runner.manipulation.Filter;
 
 public final class GlobFilter extends Filter
 {
-  private final ArrayList<Pattern> patterns = new ArrayList<Pattern>();
+  private final ArrayList<Pattern> patterns = new ArrayList<>();
   private final RunSettings settings;
 
   public GlobFilter(RunSettings settings, Iterable<String> globPatterns)

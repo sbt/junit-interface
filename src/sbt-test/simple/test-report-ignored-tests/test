@@ -1,0 +1,3 @@
+# Test that `@Ignored` tests are reported as "ignored" and not "skipped"
+-> test
+> checkTestSummaryOutput

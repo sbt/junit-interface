@@ -25,7 +25,7 @@ class RunSettings {
 
   private final boolean decodeScalaNames;
   private final HashMap<String, String> sysprops;
-  private final HashSet<String> ignoreRunners = new HashSet<String>();
+  private final HashSet<String> ignoreRunners = new HashSet<>();
 
   RunSettings(boolean color, boolean decodeScalaNames, boolean quiet,
               Verbosity verbosity, Summary summary, boolean logAssert, String ignoreRunners,
@@ -81,7 +81,7 @@ class RunSettings {
 
   String buildColoredMessage(Throwable t, String c1) {
     if(t == null) return "null";
-    if(!logExceptionClass || (!logAssert && (t instanceof AssertionError)))  return t.getMessage();
+    if(!logExceptionClass || !logAssert && t instanceof AssertionError)  return t.getMessage();
     StringBuilder b = new StringBuilder();
 
     String cn = decodeName(t.getClass().getName());
@@ -89,7 +89,7 @@ class RunSettings {
     int pos2 = pos1 == -1 ? cn.lastIndexOf('.') : cn.lastIndexOf('.', pos1);
     if(pos2 == -1) b.append(c(cn, c1));
     else {
-      b.append(cn.substring(0, pos2));
+      b.append(cn, 0, pos2);
       b.append('.');
       b.append(c(cn.substring(pos2+1), c1));
     }
@@ -114,7 +114,7 @@ class RunSettings {
     int pos2 = pos1 == -1 ? cn.lastIndexOf('.') : cn.lastIndexOf('.', pos1);
     if(pos2 == -1) b.append(c(cn, c1));
     else {
-      b.append(cn.substring(0, pos2));
+      b.append(cn, 0, pos2);
       b.append('.');
       b.append(c(cn.substring(pos2+1), c1));
     }
@@ -139,7 +139,7 @@ class RunSettings {
   boolean ignoreRunner(String cln) { return ignoreRunners.contains(cln); }
 
   Map<String, Object> overrideSystemProperties() {
-    HashMap<String, Object> oldprops = new HashMap<String, Object>();
+    HashMap<String, Object> oldprops = new HashMap<>();
     synchronized(System.getProperties()) {
       for(Map.Entry<String, String> me : sysprops.entrySet()) {
         String old = System.getProperty(me.getKey());
@@ -164,11 +164,11 @@ class RunSettings {
     }
   }
 
-  static enum Verbosity {
+  enum Verbosity {
     TERSE, RUN_FINISHED, STARTED, TEST_FINISHED
   }
 
-  static enum Summary {
+  enum Summary {
     SBT, ONE_LINE, LIST_FAILED
   }
 }

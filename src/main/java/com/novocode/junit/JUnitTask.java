@@ -92,7 +92,7 @@ final class JUnitTask implements Task {
   }
 
   private static Set<Class<?>> loadClasses(ClassLoader classLoader, Set<String> classNames) throws ClassNotFoundException {
-    Set<Class<?>> classes = new HashSet<Class<?>>();
+    Set<Class<?>> classes = new HashSet<>();
     for(String className : classNames) {
       classes.add(classLoader.loadClass(className));
     }

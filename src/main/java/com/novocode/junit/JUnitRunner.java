@@ -28,10 +28,10 @@ final class JUnitRunner implements Runner {
         logAssert = true, logExceptionClass = true;
     RunSettings.Verbosity verbosity = RunSettings.Verbosity.TERSE;
     RunSettings.Summary summary = RunSettings.Summary.SBT;
-    HashMap<String, String> sysprops = new HashMap<String, String>();
-    ArrayList<String> globPatterns = new ArrayList<String>();
-    Set<String> includeCategories = new HashSet<String>();
-    Set<String> excludeCategories = new HashSet<String>();
+    HashMap<String, String> sysprops = new HashMap<>();
+    ArrayList<String> globPatterns = new ArrayList<>();
+    Set<String> includeCategories = new HashSet<>();
+    Set<String> excludeCategories = new HashSet<>();
 
     String testFilter = "";
     String ignoreRunners = "org.junit.runners.Suite";
