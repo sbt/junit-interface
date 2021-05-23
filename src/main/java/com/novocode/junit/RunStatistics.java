@@ -10,7 +10,6 @@ class RunStatistics {
 
   private int failedCount, ignoredCount, otherCount;
   private final ArrayList<String> failedNames = new ArrayList<>();
-  private final ArrayList<String> otherNames = new ArrayList<>();
   private volatile long accumulatedTime;
 
   RunStatistics(RunSettings settings) {
@@ -28,14 +27,13 @@ class RunStatistics {
     else {
       if(s == Status.Ignored) ignoredCount++;
       else otherCount++;
-      otherNames.add(e.fullyQualifiedName());
     }
   }
 
   private String summaryLine() {
     return (failedCount == 0 ? "All tests passed: " : "Some tests failed: ") +
       failedCount+" failed, "+ignoredCount+" ignored, "+(failedCount+ignoredCount+otherCount)+" total, "+
-      (accumulatedTime/1000.0)+"s";
+      accumulatedTime / 1000.0 +"s";
   }
 
   private static String mkString(List<String> l) {
@@ -52,7 +50,7 @@ class RunStatistics {
       case LIST_FAILED:
         return failedNames.isEmpty() ?
           summaryLine() :
-          (summaryLine() + "\n- Failed tests: " + mkString(failedNames));
+          summaryLine() + "\n- Failed tests: " + mkString(failedNames);
       case ONE_LINE:
         return summaryLine();
       default:

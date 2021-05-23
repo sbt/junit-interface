@@ -1,0 +1,4 @@
+ -> testOnly MyCompositeTest1
+> checkAfterTestOnly
+-> test
+> checkAfterTest

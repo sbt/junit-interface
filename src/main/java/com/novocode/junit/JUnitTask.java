@@ -41,7 +41,8 @@ final class JUnitTask implements Task {
     EventDispatcher ed = new EventDispatcher(logger, eventHandler, settings, fingerprint, taskDescription, runner.runStatistics);
     JUnitCore ju = new JUnitCore();
     ju.addListener(ed);
-    if (runner.runListener != null) ju.addListener(runner.runListener);
+
+    runner.runListeners.forEach(ju::addListener);
 
     Map<String, Object> oldprops = settings.overrideSystemProperties();
     try {
@@ -91,7 +92,7 @@ final class JUnitTask implements Task {
   }
 
   private static Set<Class<?>> loadClasses(ClassLoader classLoader, Set<String> classNames) throws ClassNotFoundException {
-    Set<Class<?>> classes = new HashSet<Class<?>>();
+    Set<Class<?>> classes = new HashSet<>();
     for(String className : classNames) {
       classes.add(classLoader.loadClass(className));
     }

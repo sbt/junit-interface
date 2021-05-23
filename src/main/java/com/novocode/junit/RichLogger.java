@@ -10,7 +10,7 @@ final class RichLogger
   private final Logger[] loggers;
   private final RunSettings settings;
   /* The top element is the test class of the currently executing test */
-  private final Stack<String> currentTestClassName = new Stack<String>();
+  private final Stack<String> currentTestClassName = new Stack<>();
 
   RichLogger(Logger[] loggers, RunSettings settings, String testClassName)
   {
@@ -132,7 +132,7 @@ final class RichLogger
   {
     boolean highlight = settings.color && (
         testClassName.equals(e.getClassName()) ||
-        (testFileName != null && testFileName.equals(e.getFileName()))
+                testFileName != null && testFileName.equals(e.getFileName())
       );
     StringBuilder b = new StringBuilder();
     b.append(settings.decodeName(e.getClassName() + '.' + e.getMethodName()));

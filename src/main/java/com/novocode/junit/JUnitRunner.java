@@ -6,7 +6,7 @@ import sbt.testing.Task;
 import sbt.testing.TaskDef;
 
 import java.util.*;
-
+import java.util.stream.Collectors;
 
 final class JUnitRunner implements Runner {
   private final String[] args;
@@ -16,7 +16,7 @@ final class JUnitRunner implements Runner {
   private volatile boolean used = false;
 
   final ClassLoader testClassLoader;
-  final RunListener runListener;
+  final List<RunListener> runListeners;
   final RunStatistics runStatistics;
 
   JUnitRunner(String[] args, String[] remoteArgs, ClassLoader testClassLoader) {
@@ -28,14 +28,14 @@ final class JUnitRunner implements Runner {
         logAssert = true, logExceptionClass = true;
     RunSettings.Verbosity verbosity = RunSettings.Verbosity.TERSE;
     RunSettings.Summary summary = RunSettings.Summary.SBT;
-    HashMap<String, String> sysprops = new HashMap<String, String>();
-    ArrayList<String> globPatterns = new ArrayList<String>();
-    Set<String> includeCategories = new HashSet<String>();
-    Set<String> excludeCategories = new HashSet<String>();
+    HashMap<String, String> sysprops = new HashMap<>();
+    ArrayList<String> globPatterns = new ArrayList<>();
+    Set<String> includeCategories = new HashSet<>();
+    Set<String> excludeCategories = new HashSet<>();
 
     String testFilter = "";
     String ignoreRunners = "org.junit.runners.Suite";
-    String runListener = null;
+    final List<String> runListeners = new ArrayList<>();
     for(String s : args) {
       if("-q".equals(s)) quiet = true;
       else if("-v".equals(s)) verbosity = RunSettings.Verbosity.STARTED;
@@ -48,7 +48,7 @@ final class JUnitRunner implements Runner {
       else if("-c".equals(s)) logExceptionClass = false;
       else if(s.startsWith("--tests=")) testFilter = s.substring(8);
       else if(s.startsWith("--ignore-runners=")) ignoreRunners = s.substring(17);
-      else if(s.startsWith("--run-listener=")) runListener = s.substring(15);
+      else if(s.startsWith("--run-listener=")) runListeners.add(s.substring(15));
       else if(s.startsWith("--include-categories=")) includeCategories.addAll(Arrays.asList(s.substring(21).split(",")));
       else if(s.startsWith("--exclude-categories=")) excludeCategories.addAll(Arrays.asList(s.substring(21).split(",")));
       else if(s.startsWith("-D") && s.contains("=")) {
@@ -68,7 +68,9 @@ final class JUnitRunner implements Runner {
       new RunSettings(!nocolor, decodeScalaNames, quiet, verbosity, summary, logAssert, ignoreRunners, logExceptionClass,
         sysprops, globPatterns, includeCategories, excludeCategories,
         testFilter);
-    this.runListener = createRunListener(runListener);
+    this.runListeners = runListeners.stream()
+            .map(this::createRunListener)
+            .collect(Collectors.toList());
     this.runStatistics = new RunStatistics(settings);
   }
 
