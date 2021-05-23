@@ -17,7 +17,7 @@ lazy val `junit-interface` = (project in file("."))
     sbtPlugin := false
 
     libraryDependencies ++= Seq(
-      "junit" % "junit" % "4.13.1",
+      "junit" % "junit" % "4.13.2",
       "org.scala-sbt" % "test-interface" % "1.0",
     )
 
