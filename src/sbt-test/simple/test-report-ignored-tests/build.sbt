@@ -2,7 +2,7 @@ name := "test-report-ignored-tests"
 
 scalaVersion := "2.13.6"
 
-libraryDependencies += "com.novocode" % "junit-interface" % sys.props("plugin.version") % "test"
+libraryDependencies += "com.github.sbt" % "junit-interface" % sys.props("plugin.version") % "test"
 
 val checkTestSummaryOutput = taskKey[Unit]("Check test summary output")
 

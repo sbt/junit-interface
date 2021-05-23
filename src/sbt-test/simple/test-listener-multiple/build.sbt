@@ -2,7 +2,7 @@ name := "test-project"
 
 scalaVersion := "2.10.7"
 
-libraryDependencies += "com.novocode" % "junit-interface" % sys.props("plugin.version") % "test"
+libraryDependencies += "com.github.sbt" % "junit-interface" % sys.props("plugin.version") % "test"
 
 testOptions += Tests.Argument(
   TestFrameworks.JUnit,
