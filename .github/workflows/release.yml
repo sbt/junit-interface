@@ -1,21 +1,11 @@
-name: CI
+name: Release
 on:
-  pull_request:
   push:
-
+    tags:
+      - '*'
 jobs:
-  test:
-    strategy:
-      fail-fast: false
-      matrix:
-        include:
-          - os: ubuntu-latest
-            java: 8
-            jobtype: 1
-          - os: ubuntu-latest
-            java: 11
-            jobtype: 1
-    runs-on: ${{ matrix.os }}
+  build:
+    runs-on: ubuntu-latest
     env:
       # define Java options for both official sbt and sbt-extras
       JAVA_OPTS: -Xms2048M -Xmx2048M -Xss6M -XX:ReservedCodeCacheSize=256M -Dfile.encoding=UTF-8
@@ -26,13 +16,22 @@ jobs:
     - name: Setup
       uses: olafurpg/setup-scala@v10
       with:
-        java-version: "adopt@1.${{ matrix.java }}"
+        java-version: "adopt@1.8"
     - name: Coursier cache
-      uses: coursier/cache-action@v6
-    - name: Build and test
-      shell: bash
+      uses: coursier/cache-action@v5
+    - name: Test
       run: |
-        sbt -v test scripted
+        sbt test scripted packagedArtifacts
+    - name: Release
+      env:
+        SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
+        SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+        PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
+        PGP_SECRET: ${{ secrets.PGP_SECRET }}
+        CI_CLEAN: clean
+        CI_RELEASE: publishSigned
+      run: |
+        sbt ci-release
         rm -rf "$HOME/.ivy2/local" || true
         rm -r $(find $HOME/.sbt/boot -name "*-SNAPSHOT") || true
         find $HOME/Library/Caches/Coursier/v1        -name "ivydata-*.properties" -delete || true
