@@ -6,9 +6,11 @@ Unlike Scala testing frameworks like ScalaTest (which can also run JUnit test ca
 
 See LICENSE.txt for licensing conditions (BSD-style).
 
-Add the following dependency to your build.sbt:
+Add the following dependency to your `build.sbt`:
 
-    libraryDependencies += "com.novocode" % "junit-interface" % "0.11" % "test"
+```scala
+libraryDependencies += "com.github.sbt" % "junit-interface" % "0.12" % Test
+```
 
 JUnit itself is automatically pulled in as a transitive dependency. sbt already knows about junit-interface so the dependency alone is enough. You do not have to add it to the list of test frameworks.
 
@@ -41,8 +43,10 @@ Any parameter not starting with `-` or `+` is treated as a glob pattern for matc
 
 You can set default options in your build.sbt file:
 
-    testOptions += Tests.Argument(TestFrameworks.JUnit, "-q", "-v")
+```scala
+testOptions += Tests.Argument(TestFrameworks.JUnit, "-q", "-v")
+```
 
-Or use them with the testQuick and testOnly commands:
+Or use them with the `testQuick` and `testOnly` commands:
 
     testOnly -- +q +v *Sequence*h2mem*
