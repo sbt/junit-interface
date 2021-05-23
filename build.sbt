@@ -1,6 +1,11 @@
-ThisBuild / version := "0.12-SNAPSHOT"
-ThisBuild / organization := "com.novocode"
+ThisBuild / version := {
+  val orig = (ThisBuild / version).value
+  if (orig.endsWith("-SNAPSHOT")) "-SNAPSHOT"
+  else orig
+}
+ThisBuild / organization := "com.github.sbt"
 ThisBuild / description := "An implementation of sbt's test interface for JUnit 4"
+ThisBuild / dynverSonatypeSnapshots := true
 
 lazy val `junit-interface` = (project in file("."))
   .enablePlugins(SbtPlugin)
@@ -28,14 +33,15 @@ lazy val `junit-interface` = (project in file("."))
       s"-Dplugin.version=${version.value}",
       "-Xmx256m"
     )
+
+    publishMavenStyle := true
+    pomIncludeRepository := { _ => false }
   })
 
 ThisBuild / publishTo := Some(
   if(version.value.trim.endsWith("SNAPSHOT")) "snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
   else "releases"  at "https://oss.sonatype.org/service/local/staging/deploy/maven2"
 )
-ThisBuild / publishMavenStyle := true
-ThisBuild / pomIncludeRepository := { _ => false }
 ThisBuild / homepage := Some(url("http://github.com/sbt/junit-interface/"))
 ThisBuild / startYear := Some(2009)
 ThisBuild / licenses += ("Two-clause BSD-style license", url("http://github.com/sbt/junit-interface/blob/master/LICENSE.txt"))
@@ -45,7 +51,13 @@ ThisBuild / developers := List(
     name  = "Stefan Zeiger",
     email = "szeiger@novocode.com",
     url   = url("http://szeiger.de")
-  )
+  ),
+  Developer(
+    id    = "eed3si9n",
+    name  = "Eugene Yokota",
+    email = "@eed3si9n",
+    url   = url("https://eed3si9n.com/")
+  ),
 )
 ThisBuild / scmInfo := Some(
   ScmInfo(
