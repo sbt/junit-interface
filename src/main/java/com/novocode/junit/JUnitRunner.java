@@ -3,6 +3,8 @@ package com.novocode.junit;
 import org.junit.runner.notification.RunListener;
 import sbt.testing.Runner;
 import sbt.testing.Task;
+import sbt.testing.Selector;
+import sbt.testing.TestSelector;
 import sbt.testing.TaskDef;
 
 import java.util.*;
@@ -77,13 +79,36 @@ final class JUnitRunner implements Runner {
   @Override
   public Task[] tasks(TaskDef[] taskDefs) {
     used = true;
-    int length = taskDefs.length;
-    Task[] tasks = new Task[length];
-    for (int i = 0; i < length; i++) {
-      TaskDef taskDef = taskDefs[i];
-      tasks[i] = new JUnitTask(this, settings, taskDef);
-    }
+    Task[] tasks = Arrays
+        .stream(taskDefs)
+        .map(taskDef -> {
+          RunSettings alteredSettings = alterRunSettings(this.settings, taskDef.selectors());
+          return new JUnitTask(this, alteredSettings, taskDef);
+        })
+        .toArray(Task[]::new);
     return tasks;
+  }
+
+  /**
+   * Alter default RunSettings depending on the passed selectors.
+   * If selectors contains only elements of type TestSelector, then default settings are altered to include only test
+   * names from these selectors. This allows to run particular test cases within given test class.
+   * testFilter is treated as a regular expression, hence joining is done via '|'.
+   */
+  private RunSettings alterRunSettings(RunSettings defaultSettings, Selector[] selectors) {
+    boolean onlyTestSelectors = Arrays.stream(selectors).allMatch(selector -> selector instanceof TestSelector);
+    if (onlyTestSelectors) {
+      String testFilter = Arrays
+          .stream(selectors)
+          .map(selector -> ((TestSelector) selector).testName())
+          .collect(Collectors.joining("|"));
+      // if already provided testFilter is not empty add to it | (regex or operator)
+      String currentFilter = defaultSettings.testFilter.length() > 0 ? defaultSettings.testFilter + "|" : "";
+      String newFilter = currentFilter + testFilter;
+      return defaultSettings.withTestFilter(newFilter);
+    }
+
+    return defaultSettings;
   }
 
   private RunListener createRunListener(String runListenerClassName) {

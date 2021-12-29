@@ -50,6 +50,15 @@ class RunSettings {
     this.testFilter = testFilter;
   }
 
+  public RunSettings withTestFilter(String newTestFilter) {
+    String ignoreRunners = String.join(",", this.ignoreRunners);
+    return new RunSettings(
+        this.color, this.decodeScalaNames, this.quiet, this.verbosity, this.summary, this.logAssert,
+        ignoreRunners, this.logExceptionClass, this.sysprops, this.globPatterns, this.includeCategories,
+        this.excludeCategories, newTestFilter
+    );
+  }
+
   String decodeName(String name) {
     return decodeScalaNames ? decodeScalaName(name) : name;
   }
@@ -108,7 +117,7 @@ class RunSettings {
 
   private String buildColoredName(Description desc, String c1, String c2, String c3) {
     StringBuilder b = new StringBuilder();
-    
+
     String cn = decodeName(desc.getClassName());
     int pos1 = cn.indexOf('$');
     int pos2 = pos1 == -1 ? cn.lastIndexOf('.') : cn.lastIndexOf('.', pos1);
