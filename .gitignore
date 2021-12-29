@@ -12,3 +12,7 @@ target
 /\.manager/
 /\.idea/
 /\.idea_modules/
+.metals/
+.bloop/
+.bsp/
+.vscode/
