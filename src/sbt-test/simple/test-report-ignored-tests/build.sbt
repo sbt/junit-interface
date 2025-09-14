@@ -1,6 +1,6 @@
 name := "test-report-ignored-tests"
 
-scalaVersion := "2.13.6"
+scalaVersion := "2.13.16"
 
 libraryDependencies += "com.github.sbt" % "junit-interface" % sys.props("plugin.version") % "test"
 

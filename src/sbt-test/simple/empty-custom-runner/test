@@ -1,0 +1,11 @@
+# Running a @RunWith suite whose description tree has zero atomic children
+# should NOT crash; it should be treated as an empty run with 0 tests.
+
+# Compile the test classes first
+> Test/compile
+
+# Run only the suite - this should not crash
+> testOnly *JSEnvMatrixSuite
+
+# Verify compilation succeeded (indicating no crash during the above command)
+> checkEmptyRun

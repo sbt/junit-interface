@@ -1,6 +1,6 @@
 name := "test-project"
 
-scalaVersion := "2.10.7"
+scalaVersion := "2.11.12"
 
 libraryDependencies += "com.github.sbt" % "junit-interface" % sys.props("plugin.version") % Test
 

@@ -2,10 +2,7 @@ package com.novocode.junit;
 
 import junit.framework.TestCase;
 import org.junit.experimental.categories.Categories;
-import org.junit.runner.Description;
-import org.junit.runner.JUnitCore;
-import org.junit.runner.Request;
-import org.junit.runner.RunWith;
+import org.junit.runner.*;
 import sbt.testing.*;
 
 import java.lang.annotation.Annotation;
@@ -61,15 +58,64 @@ final class JUnitTask implements Task {
                 Categories.CategoryFilter.categoryFilter(true, loadClasses(runner.testClassLoader, settings.includeCategories), true,
                     loadClasses(runner.testClassLoader, settings.excludeCategories)));
           }
-          ju.run(request);
-        }
+          // If the resulting request yields zero atomic test descriptions, treat as empty suite.
+          // Occurs with certain custom @RunWith runners that deliberately don't expose
+          // atomic tests (e.g., capability matrix collapses to nothing). We short-circuit
+          // to a graceful empty run to avoid downstream AIOOBEs
+          Description rootDesc;
+          try {
+              rootDesc = request.getRunner().getDescription();
+          } catch (Exception e) {
+              logger.warn("Unable to obtain JUnit description for " + testClassName + ": " + e);
+              // Uniform lifecycle even on exception path
+              ed.testRunStarted(taskDescription);
+              ed.testExecutionFailed(testClassName, e); // report failure during the run
+              Result result = new Result();
+              ed.testRunFinished(result);
+              return new Task[0];
+          }
+          if (isEffectivelyEmpty(rootDesc)) {
+              logger.debug("Suite " + testClassName + " contains no atomic tests – treating as empty.");
+              // Emit start/finish so stats remain consistent, but no test events.
+              Description startDesc = (rootDesc != null ? rootDesc : taskDescription);
+              ed.testRunStarted(startDesc);
+              Result result = new Result();
+              ed.testRunFinished(result);
+          } else {
+              ju.run(request);
+          }
+       }
       } catch(Exception ex) {
-        ed.testExecutionFailed(testClassName, ex);
+          // Uniform lifecycle even on exception path
+          ed.testRunStarted(taskDescription);
+          ed.testExecutionFailed(testClassName, ex);
+          Result result = new Result();
+          ed.testRunFinished(result);
       }
     } finally {
       settings.restoreSystemProperties(oldprops);
     }
     return new Task[0]; // junit tests do not nest
+  }
+
+  private static boolean isEffectivelyEmpty(Description root) {
+      if (root == null) return true;
+      if (root.isTest()) return false;          // Root is an atomic test
+      List<Description> children = root.getChildren();
+      if (children.isEmpty()) return true;      // Non-test node, no children → empty
+      Deque<Description> q = new ArrayDeque<>();
+      for (Description child : children) {
+          if (child.isTest()) return false;
+          q.addLast(child);
+      }
+      while (!q.isEmpty()) {
+          Description d = q.removeFirst();
+          for (Description child : d.getChildren()) {
+              if (child.isTest()) return false;
+              q.addLast(child);
+          }
+      }
+      return true; // no test nodes found
   }
 
   private boolean shouldRun(Fingerprint fingerprint, Class<?> clazz, RunSettings settings) {

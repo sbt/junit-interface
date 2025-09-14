@@ -1,0 +1,13 @@
+# Test a working parameterized matrix case with zero children at discovery time
+
+# Clean any previous results
+$ delete target/matrix-results.txt
+
+# Compile the test classes
+> Test/compile
+
+# Run the parameterized matrix suite
+> testOnly *JSEnvMatrixSuite
+
+# Verify the matrix executed all combinations correctly
+> checkMatrixRun

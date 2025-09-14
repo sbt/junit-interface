@@ -8,13 +8,15 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        os: [ ubuntu-latest ]
+        java: [ "8", "11", "21" ]
         include:
-          - os: ubuntu-latest
-            java: 8
-            jobtype: 1
-          - os: ubuntu-latest
-            java: 11
-            jobtype: 1
+          - java: 8
+            distribution: zulu
+          - java: 11
+            distribution: temurin
+          - java: 21
+            distribution: temurin
     runs-on: ${{ matrix.os }}
     env:
       # define Java options for both official sbt and sbt-extras
@@ -23,10 +25,14 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Setup
-      uses: olafurpg/setup-scala@v10
+    - name: Setup JDK
+      uses: actions/setup-java@v5
       with:
-        java-version: "adopt@1.${{ matrix.java }}"
+        distribution: "${{ matrix.distribution }}"
+        java-version: "${{ matrix.java }}"
+        cache: sbt
+    - name: Setup sbt
+      uses: sbt/setup-sbt@v1
     - name: Coursier cache
       uses: coursier/cache-action@v6
     - name: Build and test
