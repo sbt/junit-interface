@@ -15,9 +15,9 @@ val listenerFile = settingKey[File]("location of the listener output")
 
 listenerFile := target.value / "listener.txt"
 
-javaOptions in Test += "-Djunit.output.file=" + listenerFile.value.getAbsolutePath
+Test / javaOptions += "-Djunit.output.file=" + listenerFile.value.getAbsolutePath
 
-fork in Test := true
+Test / fork := true
 
 val checkRunListenerFile = taskKey[Unit]("Tests that the file is correct")
 
