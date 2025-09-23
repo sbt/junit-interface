@@ -8,7 +8,7 @@ libraryDependencies += "com.github.sbt" % "junit-interface" % sys.props("plugin.
 val checkTestDefinitions = taskKey[Unit]("Tests that the test is discovered properly")
 
 checkTestDefinitions := {
-  val definitions = (definedTests in Test).value
+  val definitions = (Test / definedTests).value
   assert(definitions.length == 1, "Found more than the one test!")
   // TODO - Check fingerprint?
   streams.value.log.info("Test name = " + definitions.head.name)
